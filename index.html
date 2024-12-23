@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage Sale Hudson e Sthefanny</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .text-center {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela Inicial -->
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Garage Sale Hudson e Sthefanny</h1>
+        <p class="text-center mb-4">Estamos a mudar para outro país e por isso estamos a vender muitas coisas. Confira abaixo!</p>
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <input type="text" id="filtro-produtos" class="form-control" placeholder="Procure um produto...">
+            </div>
+            <div class="col-md-6">
+                <select id="filtro-categoria" class="form-select">
+                    <option value="">Todas as Categorias</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" id="produtos-container">
+            <!-- Os produtos serão carregados dinamicamente aqui -->
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="carouselExample" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="carousel-images">
+                            <!-- As imagens serão carregadas dinamicamente aqui -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                    <h2 id="detalhe-titulo" class="text-primary">Produto</h2>
+                    <p><strong>Descrição:</strong> <span id="detalhe-descricao"></span></p>
+                    <p><strong>Valor:</strong> R$ <span id="detalhe-valor"></span></p>
+                    <p><strong>Disponibilidade:</strong> <span id="detalhe-disponibilidade"></span></p>
+                    <p><strong>Data de Entrega:</strong> <span id="detalhe-data"></span></p>
+                    <p><strong>Estado:</strong> <span id="detalhe-estado"></span></p>
+                    <p><strong>Categoria:</strong> <span id="detalhe-categoria"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="detalhe-whatsapp" class="btn btn-success">Contactar via WhatsApp</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const produtos = [
+                {
+                    "id": 1,
+                    "titulo": "Produto 1",
+                    "descricao": "Este é um excelente produto 1.",
+                    "valor": 100.00,
+                    "disponivel": true,
+                    "dataEntrega": "30/12/2024",
+                    "estado": "Novo",
+                    "categoria": "Móveis",
+                    "imagens": ["bike-hud-1.jpg", "bike-hud-2.jpg", "bike-hud-1.jpg", "foto4.jpg", "bike-hud-1.jpg"],
+                    "whatsapp": "https://wa.me/5511999999999"
+                },
+                {
+                    "id": 2,
+                    "titulo": "Produto 2",
+                    "descricao": "Este é um excelente produto 2.",
+                    "valor": 150.00,
+                    "disponivel": false,
+                    "dataEntrega": "05/01/2025",
+                    "estado": "Usado",
+                    "categoria": "Móveis",
+                    "imagens": ["poltrona-1.jpg", "poltrona-1.jpg", "poltrona-1.jpg", "poltrona-1.jpg", "poltrona-1.jpg"],
+                    "whatsapp": "https://wa.me/5511999999998"
+                },
+                {
+                    "id": 3,
+                    "titulo": "Produto 2",
+                    "descricao": "Este é um excelente produto 2.",
+                    "valor": 150.00,
+                    "disponivel": false,
+                    "dataEntrega": "05/01/2025",
+                    "estado": "Usado",
+                    "categoria": "Eletrônicos",
+                    "imagens": ["switch-1.jpg", "switch-1.jpg", "switch-1.jpg", "switch-1.jpg", "switch-1.jpg"],
+                    "whatsapp": "https://wa.me/5511999999998"
+                },
+                {
+                    "id": 4,
+                    "titulo": "Produto 2",
+                    "descricao": "Este é um excelente produto 2.",
+                    "valor": 150.00,
+                    "disponivel": false,
+                    "dataEntrega": "05/01/2025",
+                    "estado": "Usado",
+                    "categoria": "Eletrônicos",
+                    "imagens": ["volante-g23-1.jpg", "volante-g23-1.jpg", "volante-g23-1.jpg", "volante-g23-1.jpg", "volante-g23-1.jpg"],
+                    "whatsapp": "https://wa.me/5511999999998"
+                },
+                {
+                    "id": 5,
+                    "titulo": "Produto 2",
+                    "descricao": "Este é um excelente produto 2.",
+                    "valor": 150.00,
+                    "disponivel": false,
+                    "dataEntrega": "05/01/2025",
+                    "estado": "Usado",
+                    "categoria": "Eletrônicos",
+                    "imagens": ["ipad-1.jpg", "ipad-2.jpg", "ipad-3.jpg", "ipad-4.jpg", "ipad-4.jpg"],
+                    "whatsapp": "https://wa.me/5511999999998"
+                },
+                {
+                    "id": 6,
+                    "titulo": "Produto 2",
+                    "descricao": "Este é um excelente produto 2.",
+                    "valor": 150.00,
+                    "disponivel": false,
+                    "dataEntrega": "05/01/2025",
+                    "estado": "Usado",
+                    "categoria": "Eletrônicos",
+                    "imagens": ["ipad-1.jpg", "ipad-2.jpg", "ipad-3.jpg", "ipad-4.jpg", "ipad-4.jpg"],
+                    "whatsapp": "https://wa.me/5511999999998"
+                }
+            ];
+
+            function carregarCategorias() {
+                const categorias = [...new Set(produtos.map(produto => produto.categoria))];
+                const filtroCategoria = $("#filtro-categoria");
+                categorias.forEach(categoria => {
+                    filtroCategoria.append(`<option value="${categoria}">${categoria}</option>`);
+                });
+            }
+
+            function carregarProdutos(filtroTexto = "", filtroCategoria = "") {
+                const container = $("#produtos-container");
+                container.empty();
+
+                produtos.filter(produto => 
+                    produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) && 
+                    (filtroCategoria === "" || produto.categoria === filtroCategoria)
+                ).forEach(produto => {
+                    container.append(`
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="images/${produto.imagens[0]}" class="card-img-top" alt="${produto.titulo}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${produto.titulo}</h5>
+                                    <p class="card-text">Categoria: ${produto.categoria}</p>
+                                    <p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>
+                                    <p class="card-text ${produto.disponivel ? 'text-success' : 'text-danger'}">
+                                        ${produto.disponivel ? 'Disponível' : 'Reservado'}
+                                    </p>
+                                    <button class="btn btn-primary" onclick="verDetalhes(${produto.id})">Ver Detalhes</button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            $("#filtro-produtos").on("input", function() {
+                carregarProdutos($(this).val(), $("#filtro-categoria").val());
+            });
+
+            $("#filtro-categoria").on("change", function() {
+                carregarProdutos($("#filtro-produtos").val(), $(this).val());
+            });
+
+            carregarCategorias();
+            carregarProdutos();
+
+            // Exibir detalhes do produto no modal
+            window.verDetalhes = function(id) {
+                const produto = produtos.find(p => p.id === id);
+                if (produto) {
+                    $("#detalhe-titulo").text(produto.titulo);
+                    $("#detalhe-descricao").text(produto.descricao);
+                    $("#detalhe-valor").text(produto.valor.toFixed(2));
+                    $("#detalhe-disponibilidade").text(produto.disponivel ? 'Disponível' : 'Reservado');
+                    $("#detalhe-data").text(produto.dataEntrega);
+                    $("#detalhe-estado").text(produto.estado);
+                    $("#detalhe-categoria").text(produto.categoria);
+                    $("#detalhe-whatsapp").attr("href", produto.whatsapp);
+
+                    const carousel = $("#carousel-images");
+                    carousel.empty();
+                    produto.imagens.forEach((imagem, index) => {
+                        carousel.append(`
+                            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                <img src="images/${imagem}" class="d-block w-100" alt="Foto ${index + 1}">
+                            </div>
+                        `);
+                    });
+
+                    $("#detalhesModal").modal('show');
+                }
+            };
+        });
+    </script>
+</body>
+</html>
+
