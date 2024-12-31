@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,34 +12,79 @@
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
         }
+
         .card {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
+            height: 100%;
         }
+
         .card:hover {
             transform: scale(1.05);
         }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: contain;
+        }
+
         .modal-header {
-            background-color: #007bff;
+            background-color: #8a2be2;
             color: white;
         }
+
         .btn-primary {
-            background-color: #007bff;
+            background-color: #9932cc;
             border: none;
         }
+
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: #4b0082;
         }
+
         .text-center {
             color: #343a40;
         }
+
+        .text-primary {
+            color: #8a2be2 !important;
+        }
+
+        .carousel-item img {
+            height: 400px;
+            object-fit: contain;
+            cursor: zoom-in;
+        }
+
+        #imagemAmpliada {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            cursor: zoom-out;
+        }
+
+        #imagemAmpliada img {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
+
 <body>
     <!-- Tela Inicial -->
     <div class="container my-5">
         <h1 class="text-center mb-4">Garage Sale Hudson e Sthefanny</h1>
-        <p class="text-center mb-4">Estamos a mudar para outro país e por isso estamos a vender muitas coisas. Confira abaixo!</p>
+        <p class="text-center mb-4">Estamos nos mudando para outro país e por isso estamos vendendo muitas coisas. Confira abaixo!</p>
         <div class="row mb-4">
             <div class="col-md-6 mb-3">
                 <input type="text" id="filtro-produtos" class="form-control" placeholder="Procure um produto...">
@@ -80,23 +126,29 @@
                     <h2 id="detalhe-titulo" class="text-primary">Produto</h2>
                     <p><strong>Descrição:</strong> <span id="detalhe-descricao"></span></p>
                     <p><strong>Valor:</strong> R$ <span id="detalhe-valor"></span></p>
+                    <p><strong>Quantidade:</strong> <span id="detalhe-quantidade"></span></p>
                     <p><strong>Disponibilidade:</strong> <span id="detalhe-disponibilidade"></span></p>
                     <p><strong>Data de Entrega:</strong> <span id="detalhe-data"></span></p>
                     <p><strong>Estado:</strong> <span id="detalhe-estado"></span></p>
                     <p><strong>Categoria:</strong> <span id="detalhe-categoria"></span></p>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="detalhe-whatsapp" class="btn btn-success">Contactar via WhatsApp</a>
+                    <a href="#" id="detalhe-whatsapp" class="btn btn-success">Contatar via WhatsApp</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Container para imagem ampliada -->
+    <div id="imagemAmpliada">
+        <img src="" alt="Imagem Ampliada">
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="products.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             function carregarCategorias() {
                 const categorias = [...new Set(produtos.map(produto => produto.categoria))];
                 const filtroCategoria = $("#filtro-categoria");
@@ -109,18 +161,19 @@
                 const container = $("#produtos-container");
                 container.empty();
 
-                produtos.filter(produto => 
-                    produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) && 
+                produtos.filter(produto =>
+                    produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) &&
                     (filtroCategoria === "" || produto.categoria === filtroCategoria)
                 ).forEach(produto => {
                     container.append(`
                         <div class="col-md-4 mb-4">
-                            <div class="card">
+                            <div class="card" onclick="verDetalhes(${produto.id})">
                                 <img src="images/${produto.imagens[0]}" class="card-img-top" alt="${produto.titulo}">
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
                                     <p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>
+                                    <p class="card-text">Quantidade: ${produto.quantidade}</p>
                                     <p class="card-text ${produto.disponivel ? 'text-success' : 'text-danger'}">
                                         ${produto.disponivel ? 'Disponível' : 'Reservado'}
                                     </p>
@@ -132,11 +185,11 @@
                 });
             }
 
-            $("#filtro-produtos").on("input", function() {
+            $("#filtro-produtos").on("input", function () {
                 carregarProdutos($(this).val(), $("#filtro-categoria").val());
             });
 
-            $("#filtro-categoria").on("change", function() {
+            $("#filtro-categoria").on("change", function () {
                 carregarProdutos($("#filtro-produtos").val(), $(this).val());
             });
 
@@ -144,24 +197,25 @@
             carregarProdutos();
 
             // Exibir detalhes do produto no modal
-            window.verDetalhes = function(id) {
+            window.verDetalhes = function (id) {
                 const produto = produtos.find(p => p.id === id);
                 if (produto) {
                     $("#detalhe-titulo").text(produto.titulo);
                     $("#detalhe-descricao").text(produto.descricao);
                     $("#detalhe-valor").text(produto.valor.toFixed(2));
                     $("#detalhe-disponibilidade").text(produto.disponivel ? 'Disponível' : 'Reservado');
+                    $("#detalhe-quantidade").text(produto.quantidade);
                     $("#detalhe-data").text(produto.dataEntrega);
                     $("#detalhe-estado").text(produto.estado);
                     $("#detalhe-categoria").text(produto.categoria);
-                    $("#detalhe-whatsapp").attr("href", produto.whatsapp);
+                    $("#detalhe-whatsapp").attr("href", "https://wa.me/5511999999998");
 
                     const carousel = $("#carousel-images");
                     carousel.empty();
                     produto.imagens.forEach((imagem, index) => {
                         carousel.append(`
                             <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                <img src="images/${imagem}" class="d-block w-100" alt="Foto ${index + 1}">
+                                <img src="images/${imagem}" class="d-block w-100" alt="Foto ${index + 1}" onclick="ampliarImagem('images/${imagem}')">
                             </div>
                         `);
                     });
@@ -169,7 +223,20 @@
                     $("#detalhesModal").modal('show');
                 }
             };
+
+            // Função para ampliar imagem
+            window.ampliarImagem = function(src) {
+                const container = $("#imagemAmpliada");
+                container.find("img").attr("src", src);
+                container.show();
+            }
+
+            // Fechar imagem ampliada ao clicar
+            $("#imagemAmpliada").click(function() {
+                $(this).hide();
+            });
         });
     </script>
 </body>
+
 </html>
