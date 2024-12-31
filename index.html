@@ -34,12 +34,82 @@
         }
 
         .btn-primary {
-            background-color: #9932cc;
-            border: none;
+            background-color: #8a2be2;
+            border-color: #8a2be2;
         }
 
         .btn-primary:hover {
             background-color: #4b0082;
+            border-color: #4b0082;
+        }
+
+        .btn-primary:focus {
+            background-color: #4b0082;
+            border-color: #4b0082;
+            box-shadow: 0 0 0 0.25rem rgba(138, 43, 226, 0.5);
+        }
+
+        .btn-primary:active {
+            background-color: #4b0082 !important;
+            border-color: #4b0082 !important;
+        }
+
+        .btn-primary:disabled {
+            background-color: #d8bfff;
+            border-color: #d8bfff;
+        }
+
+        .btn-secondary {
+            background-color: #8a2be2;
+            border-color: #8a2be2;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b0082;
+            border-color: #4b0082;
+        }
+
+        .btn-secondary:disabled {
+            background-color: #d8bfff;
+            border-color: #d8bfff;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-success:disabled {
+            background-color: #d8bfff;
+            border-color: #d8bfff;
+        }
+
+        .btn-outline-primary {
+            color: #8a2be2;
+            border-color: #8a2be2;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #8a2be2;
+            border-color: #8a2be2;
+            color: white;
+        }
+
+        .btn-outline-primary:disabled {
+            color: #d8bfff;
+            border-color: #d8bfff;
+            background-color: transparent;
+        }
+
+        .btn-outline-primary:active {
+            background-color: #4b0082 !important;
+            border-color: #4b0082 !important;
+            color: white !important;
         }
 
         .text-center {
@@ -63,7 +133,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(138, 43, 226, 0.9);
             z-index: 9999;
             cursor: zoom-out;
         }
@@ -76,6 +146,57 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+
+        .miniaturas {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .miniatura {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .miniatura.active {
+            border-color: #8a2be2;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(19%) sepia(98%) saturate(5155%) hue-rotate(282deg) brightness(86%) contrast(112%);
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .sub-item-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .sub-item-count {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .card-img-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            height: 200px;
+        }
+
+        .card-img-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -109,7 +230,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="carouselExample" class="carousel slide mb-4" data-bs-ride="carousel">
+                    <div id="carouselExample" class="carousel slide mb-2" data-bs-ride="carousel">
                         <div class="carousel-inner" id="carousel-images">
                             <!-- As imagens serão carregadas dinamicamente aqui -->
                         </div>
@@ -123,6 +244,10 @@
                         </button>
                     </div>
 
+                    <div class="miniaturas mb-4" id="miniaturas-container">
+                        <!-- As miniaturas serão carregadas dinamicamente aqui -->
+                    </div>
+
                     <h2 id="detalhe-titulo" class="text-primary">Produto</h2>
                     <p><strong>Descrição:</strong> <span id="detalhe-descricao"></span></p>
                     <p><strong>Valor:</strong> R$ <span id="detalhe-valor"></span></p>
@@ -131,6 +256,12 @@
                     <p><strong>Data de Entrega:</strong> <span id="detalhe-data"></span></p>
                     <p><strong>Estado:</strong> <span id="detalhe-estado"></span></p>
                     <p><strong>Categoria:</strong> <span id="detalhe-categoria"></span></p>
+
+                    <div class="sub-item-nav mb-3">
+                        <button class="btn btn-outline-primary" id="prev-sub-item" style="display: none;">Anterior</button>
+                        <span class="sub-item-count"></span>
+                        <button class="btn btn-outline-primary" id="next-sub-item" style="display: none;">Próximo</button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <a href="#" id="detalhe-whatsapp" class="btn btn-success">Contatar via WhatsApp</a>
@@ -149,6 +280,9 @@
     <script src="products.js"></script>
     <script>
         $(document).ready(function () {
+            let currentSubItemIndex = 0;
+            let currentSubItems = [];
+
             function carregarCategorias() {
                 const categorias = [...new Set(produtos.map(produto => produto.categoria))];
                 const filtroCategoria = $("#filtro-categoria");
@@ -165,10 +299,20 @@
                     produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) &&
                     (filtroCategoria === "" || produto.categoria === filtroCategoria)
                 ).forEach(produto => {
+                    const subItems = produto.subItems || [];
+                    let cardContent;
+                    
+                    if (subItems.length > 0) {
+                        const imagensGrid = subItems.slice(0, 4).map(item => `<img src="images/${item.imagens[0]}" alt="${item.titulo}">`).join('');
+                        cardContent = `<div class="card-img-grid">${imagensGrid}</div>`;
+                    } else {
+                        cardContent = `<img src="images/${produto.imagens[0]}" alt="${produto.titulo}" class="card-img-top">`;
+                    }
+
                     container.append(`
                         <div class="col-md-4 mb-4">
                             <div class="card" onclick="verDetalhes(${produto.id})">
-                                <img src="images/${produto.imagens[0]}" class="card-img-top" alt="${produto.titulo}">
+                                ${cardContent}
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
@@ -190,51 +334,106 @@
             });
 
             $("#filtro-categoria").on("change", function () {
-                carregarProdutos($("#filtro-produtos").val(), $(this).val());
+                const categoria = $(this).val();
+                carregarProdutos($("#filtro-produtos").val(), categoria);
             });
 
-            carregarCategorias();
-            carregarProdutos();
+            function atualizarNavegacaoSubItems() {
+                if (currentSubItems.length > 1) {
+                    $("#prev-sub-item").show();
+                    $("#next-sub-item").show();
+                    $(".sub-item-count").text(`${currentSubItemIndex + 1} de ${currentSubItems.length}`);
+                } else {
+                    $("#prev-sub-item").hide();
+                    $("#next-sub-item").hide();
+                    $(".sub-item-count").text('');
+                }
 
-            // Exibir detalhes do produto no modal
+                $("#prev-sub-item").prop('disabled', currentSubItemIndex === 0);
+                $("#next-sub-item").prop('disabled', currentSubItemIndex === currentSubItems.length - 1);
+            }
+
+            $("#prev-sub-item").click(function() {
+                if (currentSubItemIndex > 0) {
+                    currentSubItemIndex--;
+                    mostrarSubItem(currentSubItems[currentSubItemIndex]);
+                }
+            });
+
+            $("#next-sub-item").click(function() {
+                if (currentSubItemIndex < currentSubItems.length - 1) {
+                    currentSubItemIndex++;
+                    mostrarSubItem(currentSubItems[currentSubItemIndex]);
+                }
+            });
+
+            function mostrarSubItem(item) {
+                $("#detalhe-titulo").text(item.titulo);
+                $("#detalhe-descricao").text(item.descricao);
+                $("#detalhe-valor").text(item.valor.toFixed(2));
+                $("#detalhe-disponibilidade").text(item.disponivel ? 'Disponível' : 'Reservado');
+                $("#detalhe-quantidade").text(item.quantidade);
+                $("#detalhe-data").text(item.dataEntrega);
+                $("#detalhe-estado").text(item.estado);
+                $("#detalhe-categoria").text(item.categoria);
+
+                const carousel = $("#carousel-images");
+                const miniaturas = $("#miniaturas-container");
+                carousel.empty();
+                miniaturas.empty();
+
+                item.imagens.forEach((imagem, index) => {
+                    carousel.append(`
+                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                            <img src="images/${imagem}" class="d-block w-100" alt="Foto ${index + 1}" onclick="ampliarImagem('images/${imagem}')">
+                        </div>
+                    `);
+
+                    miniaturas.append(`
+                        <img src="images/${imagem}" 
+                            class="miniatura ${index === 0 ? 'active' : ''}" 
+                            alt="Miniatura ${index + 1}"
+                            onclick="mudarImagem(${index})"
+                        >
+                    `);
+                });
+
+                atualizarNavegacaoSubItems();
+            }
+
             window.verDetalhes = function (id) {
                 const produto = produtos.find(p => p.id === id);
                 if (produto) {
-                    $("#detalhe-titulo").text(produto.titulo);
-                    $("#detalhe-descricao").text(produto.descricao);
-                    $("#detalhe-valor").text(produto.valor.toFixed(2));
-                    $("#detalhe-disponibilidade").text(produto.disponivel ? 'Disponível' : 'Reservado');
-                    $("#detalhe-quantidade").text(produto.quantidade);
-                    $("#detalhe-data").text(produto.dataEntrega);
-                    $("#detalhe-estado").text(produto.estado);
-                    $("#detalhe-categoria").text(produto.categoria);
-                    $("#detalhe-whatsapp").attr("href", "https://wa.me/5511999999998");
-
-                    const carousel = $("#carousel-images");
-                    carousel.empty();
-                    produto.imagens.forEach((imagem, index) => {
-                        carousel.append(`
-                            <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                <img src="images/${imagem}" class="d-block w-100" alt="Foto ${index + 1}" onclick="ampliarImagem('images/${imagem}')">
-                            </div>
-                        `);
-                    });
-
+                    currentSubItems = produto.subItems || [produto];
+                    currentSubItemIndex = 0;
+                    mostrarSubItem(currentSubItems[currentSubItemIndex]);
                     $("#detalhesModal").modal('show');
                 }
             };
 
-            // Função para ampliar imagem
+            window.mudarImagem = function(index) {
+                $('#carouselExample').carousel(index);
+                $('.miniatura').removeClass('active');
+                $('.miniatura').eq(index).addClass('active');
+            }
+
+            $('#carouselExample').on('slide.bs.carousel', function (e) {
+                $('.miniatura').removeClass('active');
+                $('.miniatura').eq(e.to).addClass('active');
+            });
+
             window.ampliarImagem = function(src) {
                 const container = $("#imagemAmpliada");
                 container.find("img").attr("src", src);
                 container.show();
             }
 
-            // Fechar imagem ampliada ao clicar
             $("#imagemAmpliada").click(function() {
                 $(this).hide();
             });
+
+            carregarCategorias();
+            carregarProdutos();
         });
     </script>
 </body>
