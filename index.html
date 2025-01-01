@@ -582,39 +582,6 @@
                 }
             }
 
-            function generateTawkHash(visitorId) {
-
-                fetch(`https://garagesale-kappa.vercel.app/api/generate-hash?visitorId=${visitorId}`)
-                    .then(response => {
-                        console.log("Resposta da API:", response);
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Dados recebidos da API:", data);
-                        const hash = data.hash;
-
-                        if (typeof hash === "undefined") {
-                            console.error("Hash não foi gerado ou recebido corretamente.");
-                        } else {
-                            console.log("Hash gerado:", hash);
-
-                            if (typeof Tawk_API !== "undefined") {
-                                Tawk_API.setAttributes({
-                                    name: "Nome do Visitante",
-                                    email: visitorId
-                                }, function (error) {
-                                    if (error) {
-                                        console.error("Erro ao definir atributos no Tawk.to:", error);
-                                    } else {
-                                        console.log("Atributos definidos com sucesso!");
-                                    }
-                                }, hash);
-                            }
-                        }
-                    })
-                    .catch(error => console.error("Erro ao chamar a API:", error));
-            }
-
             window.abrirModalContato = function () {
                 const produto = currentSubItems[currentSubItemIndex];
                 console.log("Abrindo modal de contato");
@@ -628,18 +595,18 @@
                     console.log("Tawk_API carregado. Tentando definir atributos e adicionar tags...");
 
                     Tawk_API.setAttributes({
-                        name: "Nome do Visitante",
-                        email: visitorId,
-                        titulo: produto.titulo,
-                        valor: produto.valor.toFixed(2),
-                        categoria: produto.categoria
+                        "name": "Nome do Visitante",
+                        "email": visitorId,
+                        "titulo": produto.titulo,
+                        "valor": produto.valor.toFixed(2),
+                        "categoria": produto.categoria
                     }, function (error) {
                         if (error) {
                             console.error("Erro ao definir atributos no Tawk.to:", error);
                         } else {
                             console.log("Atributos definidos com sucesso!");
                         }
-                    }, hash); // Passa o hash aqui
+                    }); // Passa o hash aqui
 
                     Tawk_API.addTags([produto.titulo], function (error) {
                         if (error) {
