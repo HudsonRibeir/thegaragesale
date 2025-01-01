@@ -6,6 +6,9 @@ export default function handler(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*"); // Permite requisições de qualquer origem
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); // Métodos permitidos
     const crypto = require('crypto');
+    require('dotenv').config();
+    console.log("SECRET_KEY manual:", process.env.SECRET_KEY);
+
 
     const secretKey = process.env.SECRET_KEY;
     if (!secretKey) {
