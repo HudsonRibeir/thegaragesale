@@ -583,7 +583,6 @@
             }
 
             function generateTawkHash(visitorId) {
-                const visitorId = "visitante@email.com"; // Substitua pelo ID do visitante
 
                 fetch(`https://garage-sale-stel-hud.vercel.app/api/generate-hash?visitorId=${visitorId}`)
                     .then(response => response.json())
