@@ -89,18 +89,6 @@
             border-color: #d8bfff;
         }
 
-        .btn-telegram {
-            background-color: #0088cc;
-            border-color: #0088cc;
-            color: white;
-        }
-
-        .btn-telegram:hover {
-            background-color: #006699;
-            border-color: #006699;
-            color: white;
-        }
-
         .btn-outline-primary {
             color: #8a2be2;
             border-color: #8a2be2;
@@ -334,7 +322,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via Chat</a>
+                    <a href="#" id="detalhe-chat" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via Chat</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
@@ -610,8 +598,8 @@
                     Tawk_API.setAttributes({
                         "name": nome,
                         "email": email || "",
-                        "whatsapp": whatsapp || "",
-                        "titulo": produto.titulo,
+                        "phone": whatsapp || "",
+                        "produto": produto.titulo,
                         "valor": produto.valor.toFixed(2),
                         "categoria": produto.categoria
                     }, function (error) {
