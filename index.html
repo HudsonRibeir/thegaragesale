@@ -334,8 +334,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via WhatsApp</a>
-                    <a href="#" id="detalhe-telegram" class="btn btn-telegram" onclick="abrirModalTelegram(); return false;">Contatar via Telegram</a>
+                    <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via Chat</a>
+                    <!-- <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via WhatsApp</a>
+                    <a href="#" id="detalhe-telegram" class="btn btn-telegram" onclick="abrirModalTelegram(); return false;">Contatar via Telegram</a> -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
@@ -572,8 +573,34 @@
             };
 
             window.abrirModalContato = function () {
+                const produto = currentSubItems[currentSubItemIndex]; // Detalhes do produto atual
+                const detalhesProduto = {
+                    titulo: produto.titulo,
+                    valor: produto.valor.toFixed(2),
+                    categoria: produto.categoria,
+                    estado: produto.estado
+                };
+
+                // Definir atributos personalizados no Tawk.to
+                if (Tawk_API && Tawk_API.setAttributes) {
+                    Tawk_API.setAttributes(detalhesProduto, function (error) {
+                        if (error) {
+                            console.error("Erro ao definir atributos no Tawk.to:", error);
+                        }
+                    });
+                }
+
+                // Adicionar tags ao chat
+                if (Tawk_API && Tawk_API.addTags) {
+                    Tawk_API.addTags([produto.titulo], function (error) {
+                        if (error) {
+                            console.error("Erro ao adicionar tags no Tawk.to:", error);
+                        }
+                    });
+                }
+
                 $("#detalhesModal").modal('hide');
-                $("#contatoModal").modal('show');
+                $("#contatoModal").modal('show'); // Abre o modal de contato
             };
 
             window.abrirModalTelegram = function () {
