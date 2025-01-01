@@ -573,43 +573,48 @@
                 }
             };
 
-            window.abrirModalContato = function () {
-                const produto = currentSubItems[currentSubItemIndex]; // Detalhes do produto atual
+            function waitForTawkAPI(callback) {
+                if (typeof Tawk_API !== "undefined") {
+                    callback();
+                } else {
+                    console.log("Aguardando Tawk_API...");
+                    setTimeout(() => waitForTawkAPI(callback), 500);
+                }
+            }
 
+            window.abrirModalContato = function () {
+                const produto = currentSubItems[currentSubItemIndex];
                 console.log("Abrindo modal de contato");
 
-                if (typeof Tawk_API !== "undefined") {
-                    Tawk_API.onLoad = function () {
-                        // Autenticar usando a API Key
-                        Tawk_API.setAttributes({
-                            titulo: produto.titulo,
-                            valor: produto.valor.toFixed(2),
-                            categoria: produto.categoria,
-                            estado: produto.estado
-                        }, function (error) {
-                            if (error) {
-                                console.error("Erro ao definir atributos no Tawk.to:", error);
-                            } else {
-                                console.log("Atributos definidos com sucesso:", produto);
-                            }
-                        }, "eb0347177563df5578f30e4c23bc2717d6ce09f0"); // Substitua YOUR_API_KEY pela sua JavaScript API Key
+                waitForTawkAPI(() => {
+                    console.log("Tawk_API carregado. Tentando definir atributos e adicionar tags...");
 
-                        // Adicionar tags ao chat
-                        Tawk_API.addTags([produto.titulo], function (error) {
-                            if (error) {
-                                console.error("Erro ao adicionar tags no Tawk.to:", error);
-                            } else {
-                                console.log("Tags adicionadas com sucesso:", produto.titulo);
-                            }
-                        });
-                    };
-                } else {
-                    console.error("Tawk_API não está disponível.");
-                }
+                    Tawk_API.setAttributes({
+                        titulo: produto.titulo,
+                        valor: produto.valor.toFixed(2),
+                        categoria: produto.categoria,
+                        estado: produto.estado
+                    }, function (error) {
+                        if (error) {
+                            console.error("Erro ao definir atributos no Tawk.to:", error);
+                        } else {
+                            console.log("Atributos definidos com sucesso:", produto);
+                        }
+                    }, "eb0347177563df5578f30e4c23bc2717d6ce09f0");
+
+                    Tawk_API.addTags([produto.titulo], function (error) {
+                        if (error) {
+                            console.error("Erro ao adicionar tags no Tawk.to:", error);
+                        } else {
+                            console.log("Tags adicionadas com sucesso:", produto.titulo);
+                        }
+                    });
+                });
 
                 $("#detalhesModal").modal('hide');
                 $("#contatoModal").modal('show');
             };
+
 
 
             window.abrirModalTelegram = function () {
