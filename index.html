@@ -242,6 +242,21 @@
             text-align: center;
             border: 1px dashed #dee2e6;
         }
+
+        #tawk_677547d4af5bfec1dbe57fa5 {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-close {
+            border-color: #ffffff;
+            background-color: #ffffff;
+        }
     </style>
 </head>
 
@@ -374,18 +389,18 @@
     </div>
 
     <!-- Modal deChat -->
-    <div class="modal fade" id="chatModal" tabindex="-2" aria-labelledby="chatModalLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="chatModalLabel">Chat</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id='tawk_677547d4af5bfec1dbe57fa5'></div>
-                </div>
+    <div class="modal fade" id="chatModal" tabindex="-2" aria-labelledby="chatModalLabel"">
+        <div class=" modal-dialog" style="width: 356px;">
+        <div class="modal-content p-0">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id='tawk_677547d4af5bfec1dbe57fa5'></div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Container para imagem ampliada -->
@@ -397,16 +412,33 @@
     <script src="products.js"></script>
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
-        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-        Tawk_API.embedded = 'tawk_677547d4af5bfec1dbe57fa5'; // ID do seu widget
-        (function () {
-            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-            s1.async = true;
-            s1.src = 'https://embed.tawk.to/677547d4af5bfec1dbe57fa5/1igh947p7';
-            s1.charset = 'UTF-8';
-            s1.setAttribute('crossorigin', '*');
-            s0.parentNode.insertBefore(s1, s0);
-        })();
+        // Esta função cria a tag <script> do Tawk.to e injeta no DOM
+        function inicializarChat() {
+            // Se já estiver carregado, não carrega de novo
+            if (window._tawkCarregado) {
+                console.log("Tawk.to já foi carregado anteriormente.");
+                return;
+            }
+
+            // Flags de controle (opcional)
+            window._tawkCarregado = true;
+            window.Tawk_LoadStart = new Date();
+
+            // Se quiser um widget "embutido" em um <div> específico,
+            // use a linha abaixo. Caso contrário, pode até omitir.
+            window.Tawk_API = window.Tawk_API || {};
+            window.Tawk_API.embedded = 'tawk_677547d4af5bfec1dbe57fa5';
+
+            (function () {
+                var s1 = document.createElement("script");
+                var s0 = document.getElementsByTagName("script")[0];
+                s1.async = true;
+                s1.src = 'https://embed.tawk.to/677547d4af5bfec1dbe57fa5/1igh947p7';
+                s1.charset = 'UTF-8';
+                s1.setAttribute('crossorigin', '*');
+                s0.parentNode.insertBefore(s1, s0);
+            })();
+        }
     </script>
     <!--End of Tawk.to Script-->
     <script>
@@ -478,33 +510,39 @@
 
             function abrirChatModal() {
 
+                inicializarChat();
+
                 let dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
                 const produto = currentSubItems[currentSubItemIndex];
 
-                waitForTawkAPI(() => {
-                    Tawk_API.setAttributes({
-                        "name": dadosUsuario.nome,
-                        "email": dadosUsuario.email || "",
-                        "phone": dadosUsuario.whatsapp || "",
-                        "produto": produto.titulo,
-                        "valor": produto.valor.toFixed(2),
-                        "categoria": produto.categoria
-                    }, function (error) {
-                        if (error) {
-                            console.error("Erro ao definir atributos no Tawk.to:", error);
-                        } else {
-                            console.log("Atributos definidos com sucesso!");
-                        }
-                    });
+                setTimeout(() => {
+                    waitForTawkAPI(() => {
+                        window.Tawk_API.setAttributes({
+                            "name": dadosUsuario.nome,
+                            "email": dadosUsuario.email || "",
+                            "phone": dadosUsuario.whatsapp || "",
+                            "produto": produto.titulo,
+                            "valor": produto.valor.toFixed(2),
+                            "categoria": produto.categoria
+                        }, function (error) {
+                            if (error) {
+                                console.error("Erro ao definir atributos no Tawk.to:", error);
+                            } else {
+                                console.log("Atributos definidos com sucesso!");
+                            }
+                        });
 
-                    Tawk_API.addTags([produto.titulo], function (error) {
-                        if (error) {
-                            console.error("Erro ao adicionar tags no Tawk.to:", error);
-                        } else {
-                            console.log("Tags adicionadas com sucesso:", produto.titulo);
-                        }
+
+                        let tags = ["${produto.titulo}", "${produto.valor.toFixed(2)}"];
+                        window.Tawk_API.addTags([produto.titulo], function (error) {
+                            if (error) {
+                                console.error("Erro ao adicionar tags no Tawk.to:", error);
+                            } else {
+                                console.log("Tags adicionadas com sucesso:", produto.titulo);
+                            }
+                        });
                     });
-                });
+                }, 1000);
 
                 $("#contatoModal").modal('hide');
                 $("#chatModal").modal('show');
@@ -687,11 +725,20 @@
                 }
             };
 
-            function waitForTawkAPI(callback) {
-                if (typeof Tawk_API !== "undefined") {
-                    callback();
+            function waitForTawkAPI(callback, tentativas = 0) {
+                // Aqui verificamos se Tawk_API já está disponível e tem o método setAttributes()
+                if (
+                    typeof window.Tawk_API !== 'undefined' &&
+                    typeof window.Tawk_API.setAttributes === 'function'
+                ) {
+                    callback(); // Se sim, chamamos o callback
                 } else {
-                    setTimeout(() => waitForTawkAPI(callback), 500);
+                    // Se ainda não, tentamos novamente em 200ms, até um limite
+                    if (tentativas < 50) { // 50 tentativas = 10 segundos
+                        setTimeout(() => waitForTawkAPI(callback, tentativas + 1), 200);
+                    } else {
+                        console.error("Tawk_API não carregou dentro do tempo esperado.");
+                    }
                 }
             }
 
