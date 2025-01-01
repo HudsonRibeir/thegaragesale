@@ -582,22 +582,55 @@
                 }
             }
 
+            function generateTawkHash(visitorId) {
+                const visitorId = "visitante@email.com"; // Substitua pelo ID do visitante
+
+                fetch(`https://<your-project-name>.vercel.app/api/generate-hash?visitorId=${visitorId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const hash = data.hash;
+
+                        if (typeof Tawk_API !== "undefined") {
+                            Tawk_API.setAttributes({
+                                name: "Nome do Visitante",
+                                email: visitorId
+                            }, function (error) {
+                                if (error) {
+                                    console.error("Erro ao definir atributos no Tawk.to:", error);
+                                } else {
+                                    console.log("Atributos definidos com sucesso!");
+                                }
+                            }, hash);
+                        }
+                    })
+                    .catch(error => console.error("Erro ao gerar o hash:", error));
+            }
+
             window.abrirModalContato = function () {
                 const produto = currentSubItems[currentSubItemIndex];
                 console.log("Abrindo modal de contato");
 
+                const visitorId = "visitante@email.com"; // Substitua pelo ID do visitante
+                let hash = generateTawkHash(visitorId);
+
+                console.log("Hash gerado:", hash);
+
                 waitForTawkAPI(() => {
                     console.log("Tawk_API carregado. Tentando definir atributos e adicionar tags...");
 
-                    // Tawk_API.setAttributes({
-                    //     testAttribute: "Teste Atributo"
-                    // }, function (error) {
-                    //     if (error) {
-                    //         console.error("Erro ao definir atributo básico:", error);
-                    //     } else {
-                    //         console.log("Atributo básico definido com sucesso!");
-                    //     }
-                    // }, "eb0347177563df5578f30e4c23bc2717d6ce09f0");
+                    Tawk_API.setAttributes({
+                        name: "Nome do Visitante",
+                        email: visitorId,
+                        titulo: produto.titulo,
+                        valor: produto.valor.toFixed(2),
+                        categoria: produto.categoria
+                    }, function (error) {
+                        if (error) {
+                            console.error("Erro ao definir atributos no Tawk.to:", error);
+                        } else {
+                            console.log("Atributos definidos com sucesso!");
+                        }
+                    }, hash); // Passa o hash aqui
 
                     Tawk_API.addTags([produto.titulo], function (error) {
                         if (error) {
