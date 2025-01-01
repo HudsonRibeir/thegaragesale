@@ -188,15 +188,47 @@
 
         .card-img-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: 5px;
             height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img-grid.grid-1 {
+            grid-template-columns: 1fr;
+        }
+
+        .card-img-grid.grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card-img-grid.grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card-img-grid.grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        .card-img-grid.grid-6 {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        .card-img-grid.grid-9 {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+
+        .card-img-grid.grid-12 {
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
         }
 
         .card-img-grid img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -207,12 +239,26 @@
         <h1 class="text-center mb-4">Garage Sale Hudson e Sthefanny</h1>
         <p class="text-center mb-4">Estamos nos mudando para outro país e por isso estamos vendendo muitas coisas. Confira abaixo!</p>
         <div class="row mb-4">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <input type="text" id="filtro-produtos" class="form-control" placeholder="Procure um produto...">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3 mb-3">
                 <select id="filtro-categoria" class="form-select">
                     <option value="">Todas as Categorias</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <select id="filtro-disponibilidade" class="form-select">
+                    <option value="">Todos os Status</option>
+                    <option value="true">Disponível</option>
+                    <option value="false">Reservado</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <select id="ordenacao" class="form-select">
+                    <option value="">Ordenar por...</option>
+                    <option value="alfabetica">Ordem Alfabética</option>
+                    <option value="categoria">Categoria</option>
                 </select>
             </div>
         </div>
@@ -291,20 +337,35 @@
                 });
             }
 
-            function carregarProdutos(filtroTexto = "", filtroCategoria = "") {
+            function carregarProdutos(filtroTexto = "", filtroCategoria = "", filtroDisponibilidade = "", ordenacao = "") {
                 const container = $("#produtos-container");
                 container.empty();
 
-                produtos.filter(produto =>
+                let produtosFiltrados = produtos.filter(produto =>
                     produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) &&
-                    (filtroCategoria === "" || produto.categoria === filtroCategoria)
-                ).forEach(produto => {
+                    (filtroCategoria === "" || produto.categoria === filtroCategoria) &&
+                    (filtroDisponibilidade === "" || produto.disponivel.toString() === filtroDisponibilidade)
+                );
+
+                if (ordenacao === "alfabetica") {
+                    produtosFiltrados.sort((a, b) => a.titulo.localeCompare(b.titulo));
+                } else if (ordenacao === "categoria") {
+                    produtosFiltrados.sort((a, b) => a.categoria.localeCompare(b.categoria));
+                }
+
+                produtosFiltrados.forEach(produto => {
                     const subItems = produto.subItems || [];
                     let cardContent;
                     
                     if (subItems.length > 0) {
-                        const imagensGrid = subItems.slice(0, 4).map(item => `<img src="images/${item.imagens[0]}" alt="${item.titulo}">`).join('');
-                        cardContent = `<div class="card-img-grid">${imagensGrid}</div>`;
+                        const imagensGrid = subItems.map(item => `<img src="images/${item.imagens[0]}" alt="${item.titulo}">`).join('');
+                        const gridClass = subItems.length <= 1 ? 'grid-1' : 
+                                        subItems.length <= 2 ? 'grid-2' :
+                                        subItems.length <= 3 ? 'grid-3' :
+                                        subItems.length <= 4 ? 'grid-4' :
+                                        subItems.length <= 6 ? 'grid-6' :
+                                        subItems.length <= 9 ? 'grid-9' : 'grid-12';
+                        cardContent = `<div class="card-img-grid ${gridClass}">${imagensGrid}</div>`;
                     } else {
                         cardContent = `<img src="images/${produto.imagens[0]}" alt="${produto.titulo}" class="card-img-top">`;
                     }
@@ -316,8 +377,8 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
-                                    <p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>
-                                    <p class="card-text">Quantidade: ${produto.quantidade}</p>
+                                    ${subItems.length > 0 ? '' : `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>`}
+                                    <p class="card-text">Quantidade: ${subItems.length > 0 ? subItems.length + ' itens' : produto.quantidade}</p>
                                     <p class="card-text ${produto.disponivel ? 'text-success' : 'text-danger'}">
                                         ${produto.disponivel ? 'Disponível' : 'Reservado'}
                                     </p>
@@ -329,13 +390,13 @@
                 });
             }
 
-            $("#filtro-produtos").on("input", function () {
-                carregarProdutos($(this).val(), $("#filtro-categoria").val());
-            });
-
-            $("#filtro-categoria").on("change", function () {
-                const categoria = $(this).val();
-                carregarProdutos($("#filtro-produtos").val(), categoria);
+            $("#filtro-produtos, #filtro-categoria, #filtro-disponibilidade, #ordenacao").on("change input", function () {
+                carregarProdutos(
+                    $("#filtro-produtos").val(),
+                    $("#filtro-categoria").val(),
+                    $("#filtro-disponibilidade").val(),
+                    $("#ordenacao").val()
+                );
             });
 
             function atualizarNavegacaoSubItems() {

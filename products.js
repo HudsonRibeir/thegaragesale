@@ -1,15 +1,15 @@
 const produtos = [
     {
         "id": 1,
-        "titulo": "TV do quarto (pegar descrição)",
-        "descricao": "TV Samsung 43 polegadas, com 4k, com suporte a HDMI, USB, e conexão com internet. (pegar descrição)",
+        "titulo": "TV Samsung 50 polegadas",
+        "descricao": "Smart TV 50 polegadas Crystal UHD 4K UN50AU8000GXZD. Sem detalhes",
         "valor": 1000.00,
         "disponivel": true,
         "quantidade": 1,
         "dataEntrega": "Imediata",
-        "estado": "Usao",
+        "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": []
+        "imagens": ["01-tv-samsung-50-polegadas-1.jpeg", "01-tv-samsung-50-polegadas-2.jpeg", "01-tv-samsung-50-polegadas-3.jpeg"]
     },
     {
         "id": 2,
@@ -21,19 +21,19 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["01-closet-1.jpg", "01-closet-2.jpg"]
+        "imagens": ["02-closet-1.jpeg", "02-closet-2.jpeg", "02-closet-3.jpeg", "02-closet-4.jpeg"]
     },
     {
         "id": 3,
         "titulo": "Closet",
-        "descricao": "Closet 3 Gavetas 7 Nichos 2 Cabideiros 1 Maleiro 236x159x54cm Legno Crema Prime Luciane\nEsse tem alguns detalhes",
+        "descricao": "Closet 3 Gavetas 7 Nichos 2 Cabideiros 1 Maleiro 236x159x54cm Legno Crema Prime Luciane. Esse tem um detalhe, mostrado na imagem",
         "valor": 1000.00,
         "disponivel": true,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["01-closet-1.jpg", "01-closet-2.jpg"]
+        "imagens": ["03-closet-1.jpeg", "03-closet-2.jpeg", "03-closet-3.jpeg", "03-closet-4.jpeg", "03-closet-5.jpeg", "03-closet-6.jpeg"]
     },
     {
         "id": 4,
@@ -69,7 +69,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["06-poltrona-reclinavel-1.webp", "06-poltrona-reclinavel-2.webp", "06-poltrona-reclinavel-3.webp", "06-poltrona-reclinavel-4.webp", "06-poltrona-reclinavel-5.webp"]
+        "imagens": ["06-poltrona-reclinavel-1.jpeg", "06-poltrona-reclinavel-2.jpeg", "06-poltrona-reclinavel-3.jpeg", "06-poltrona-reclinavel-4.jpeg", "06-poltrona-reclinavel-5.jpeg"]
     },
     {
         "id": 7,
@@ -277,8 +277,8 @@ const produtos = [
     },
     {
         "id": 24,
-        "titulo": "Mesa Escitório Madeira",
-        "descricao": "Mesa Escitório Madeira",
+        "titulo": "Mesa Escritório Madeira",
+        "descricao": "Mesa Escritório Madeira",
         "valor": 150.00,
         "disponivel": true,
         "quantidade": 2,
@@ -289,8 +289,8 @@ const produtos = [
     },
     {
         "id": 25,
-        "titulo": "Mesa Escitório Branca",
-        "descricao": "Mesa Escitório Branca",
+        "titulo": "Mesa Escritório Branca",
+        "descricao": "Mesa Escritório Branca",
         "valor": 150.00,
         "disponivel": true,
         "quantidade": 1,
@@ -337,8 +337,8 @@ const produtos = [
     },
     {
         "id": 29,
-        "titulo": "Estante Salas",
-        "descricao": "Estante Salas",
+        "titulo": "Estante Sala",
+        "descricao": "Estante Sala",
         "valor": 1500.00,
         "disponivel": true,
         "quantidade": 1,
@@ -386,14 +386,14 @@ const produtos = [
     {
         "id": 33,
         "titulo": "Rede Wi-Fi Deco",
-        "descricao": "Rede Wi-Fi Deco",
+        "descricao": "Rede Wi-Fi Deco TP-Link",
         "valor": 2100.00,
         "disponivel": true,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["33-rede-wi-fi-deco-1.webp"]
+        "imagens": ["33-rede-wi-fi-deco-1.jpeg", "33-rede-wi-fi-deco-2.jpeg", "33-rede-wi-fi-deco-3.jpeg"]
     },
     {
         "id": 34,
@@ -554,14 +554,14 @@ const produtos = [
     {
         "id": 47,
         "titulo": "Ar Condicionado portátil 12000 BTU",
-        "descricao": "Ar Condicionado portátil 12000 BTU",
+        "descricao": "Ar Condicionado portátil 12000 BTU Olimpia Splendid",
         "valor": 150.00,
         "disponivel": true,
         "quantidade": 1,
-        "dataEntrega": "Fevereiro/2025",
+        "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["47-ar-condicionado-portátil-12000-btu-1.webp"]
+        "imagens": ["47-ar-condicionado-portátil-12000-btu-1.jpeg", "47-ar-condicionado-portátil-12000-btu-2.jpeg", "47-ar-condicionado-portátil-12000-btu-3.jpeg", "47-ar-condicionado-portátil-12000-btu-4.jpeg"]
     },
     {
         "id": 48,
@@ -594,7 +594,7 @@ const produtos = [
         "valor": 150.00,
         "disponivel": true,
         "quantidade": 1,
-        "dataEntrega": "Imediata",
+        "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
         "imagens": ["50-ar-condicionado-portátil-10000-btu-1.webp"]
@@ -723,7 +723,6 @@ const produtos = [
         "id": 61,
         "titulo": "Jogos PS4",
         "descricao": "Jogos PS4",
-        "valor": 150.00,
         "disponivel": true,
         "quantidade": 1,
         "dataEntrega": "Imediata",
@@ -754,7 +753,176 @@ const produtos = [
                 "estado": "Usado",
                 "categoria": "Jogos",
                 "imagens": ["61-2-horizon-zero-dawn-1.png"]
+            },
+            {
+                "id": "61-3",
+                "titulo": "Demon Slayer",
+                "descricao": "Jogo Demon Slayer para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-3-demon-slayer-1.png"]
+            },
+            {
+                "id": "61-4",
+                "titulo": "Assassin's Creed Origins",
+                "descricao": "Jogo Assassin's Creed Origins para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-4-assassins-creed-origins-1.png"]
+            },
+            {
+                "id": "61-5",
+                "titulo": "Spider-man",
+                "descricao": "Jogo Spider-man para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-5-spider-man-1.png"]
+            },
+            {
+                "id": "61-6",
+                "titulo": "Crash Bandicoot N-Sane Trilogy",
+                "descricao": "Jogo Crash Bandicoot N-Sane Trilogy para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-6-crash-bandicoot-n-sane-trilogy-1.png"]
+            },
+            {
+                "id": "61-7",
+                "titulo": "Red Dead Redemption 2",
+                "descricao": "Jogo Red Dead Redemption 2 para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-7-red-dead-redemption-2-1.png"]
+            },
+            {
+                "id": "61-8",
+                "titulo": "Uncharted The Nathan Drake Collection",
+                "descricao": "Jogo Uncharted The Nathan Drake Collection para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-8-uncharted-the-nathan-drake-collection-1.png"]
+            },
+            {
+                "id": "61-9",
+                "titulo": "Mortal Kombat XL",
+                "descricao": "Jogo Mortal Kombat XL para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-9-mortal-kombat-xl-1.png"]
+            },
+            {
+                "id": "61-10",
+                "titulo": "South Park: A Fenda Que Abunda a Força",
+                "descricao": "Jogo South Park: A Fenda Que Abunda a Força para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-10-south-park-a-fenda-que-abunda-a-força-1.png"]
+            },
+            {
+                "id": "61-11",
+                "titulo": "Fifa 17",
+                "descricao": "Jogo Fifa 17 para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-11-fifa-17-1.png"]
+            },
+            {
+                "id": "61-12",
+                "titulo": "The Last Guardian",
+                "descricao": "Jogo The Last Guardian para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-12-the-last-guardian-1.png"]
+            },
+            {
+                "id": "61-13",
+                "titulo": "Uncharted 4: A Thief's End",
+                "descricao": "Jogo Uncharted 4: A Thief's End para PS4",
+                "valor": 150.00,
+                "disponivel": true,
+                "quantidade": 1,
+                "dataEntrega": "Imediata",
+                "estado": "Usado",
+                "categoria": "Jogos",
+                "imagens": ["61-13-uncharted-4-a-thiefs-end-1.png"]
             }
         ]
+    },
+    {
+        "id": 62,
+        "titulo": "Estante Marrom e Amarelo",
+        "descricao": "Estante Marrom e Amarelo",
+        "valor": 150.00,
+        "disponivel": true,
+        "quantidade": 1,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Móveis",
+        "imagens": ["62-estante-marrom-e-amarelo-1.jpeg", "62-estante-marrom-e-amarelo-2.jpeg", "62-estante-marrom-e-amarelo-3.jpeg", "62-estante-marrom-e-amarelo-4.jpeg"]
+    },
+    {
+        "id": 63,
+        "titulo": "Celular Android Poco X6 Pro",
+        "descricao": "Celular Android Poco X6 Pro, com 128GB de memória interna, 8GB de RAM, e 5000mAh de bateria. Com 128GB de memória interna, 8GB de RAM, e 5000mAh de bateria.",
+        "valor": 150.00,
+        "disponivel": true,
+        "quantidade": 1,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Eletrônicos",
+        "imagens": ["63-celular-android-poco-x6-pro-1.jpeg", "63-celular-android-poco-x6-pro-2.jpeg", "63-celular-android-poco-x6-pro-3.jpeg", "63-celular-android-poco-x6-pro-4.jpeg", "63-celular-android-poco-x6-pro-5.jpeg", "63-celular-android-poco-x6-pro-6.jpeg"]
+    },
+    {
+        "id": 64,
+        "titulo": "Cabideiro",
+        "descricao": "Cabideiro",
+        "valor": 150.00,
+        "disponivel": true,
+        "quantidade": 1,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Móveis",
+        "imagens": ["64-cabideiro-1.jpeg", "64-cabideiro-2.jpeg"]
     }
 ];
+
