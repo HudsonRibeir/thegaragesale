@@ -391,7 +391,8 @@
     <script src="products.js"></script>
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
-        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date(); Tawk_API.embedded = 'tawk_677547d4af5bfec1dbe57fa5';
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        Tawk_API.embedded = 'tawk_677547d4af5bfec1dbe57fa5'; // ID do seu widget
         (function () {
             var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
             s1.async = true;
@@ -574,33 +575,37 @@
 
             window.abrirModalContato = function () {
                 const produto = currentSubItems[currentSubItemIndex]; // Detalhes do produto atual
-                const detalhesProduto = {
-                    titulo: produto.titulo,
-                    valor: produto.valor.toFixed(2),
-                    categoria: produto.categoria,
-                    estado: produto.estado
-                };
 
-                // Definir atributos personalizados no Tawk.to
-                if (Tawk_API && Tawk_API.setAttributes) {
-                    Tawk_API.setAttributes(detalhesProduto, function (error) {
-                        if (error) {
-                            console.error("Erro ao definir atributos no Tawk.to:", error);
-                        }
-                    });
-                }
-
-                // Adicionar tags ao chat
-                if (Tawk_API && Tawk_API.addTags) {
+                // Aguarde o carregamento do Tawk.to
+                if (typeof Tawk_API !== "undefined") {
+                    // Adicionar tags ao chat
                     Tawk_API.addTags([produto.titulo], function (error) {
                         if (error) {
                             console.error("Erro ao adicionar tags no Tawk.to:", error);
+                        } else {
+                            console.log("Tags adicionadas com sucesso:", produto.titulo);
                         }
                     });
+
+                    // Definir atributos personalizados
+                    Tawk_API.setAttributes({
+                        titulo: produto.titulo,
+                        valor: produto.valor.toFixed(2),
+                        categoria: produto.categoria,
+                        estado: produto.estado
+                    }, function (error) {
+                        if (error) {
+                            console.error("Erro ao definir atributos no Tawk.to:", error);
+                        } else {
+                            console.log("Atributos definidos com sucesso:", produto);
+                        }
+                    });
+                } else {
+                    console.error("Tawk.to não está disponível.");
                 }
 
                 $("#detalhesModal").modal('hide');
-                $("#contatoModal").modal('show'); // Abre o modal de contato
+                $("#contatoModal").modal('show'); // Abre o modal do Tawk.to
             };
 
             window.abrirModalTelegram = function () {
