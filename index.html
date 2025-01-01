@@ -89,6 +89,18 @@
             border-color: #d8bfff;
         }
 
+        .btn-telegram {
+            background-color: #0088cc;
+            border-color: #0088cc;
+            color: white;
+        }
+
+        .btn-telegram:hover {
+            background-color: #006699;
+            border-color: #006699;
+            color: white;
+        }
+
         .btn-outline-primary {
             color: #8a2be2;
             border-color: #8a2be2;
@@ -322,8 +334,48 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="detalhe-whatsapp" class="btn btn-success">Contatar via WhatsApp</a>
+                    <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via WhatsApp</a>
+                    <a href="#" id="detalhe-telegram" class="btn btn-telegram" onclick="abrirModalTelegram(); return false;">Contatar via Telegram</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Contato WhatsApp -->
+    <div class="modal fade" id="contatoModal" tabindex="-1" aria-labelledby="contatoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contatoModalLabel">Informações de Contato</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id='tawk_677547d4af5bfec1dbe57fa5'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Contato Telegram -->
+    <div class="modal fade" id="telegramModal" tabindex="-1" aria-labelledby="telegramModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="telegramModalLabel">Informações para Telegram</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="telegramForm">
+                        <div class="mb-3">
+                            <label for="nomeTelegram" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nomeTelegram" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-telegram" onclick="criarGrupoTelegram()">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -336,10 +388,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="products.js"></script>
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date(); Tawk_API.embedded = 'tawk_677547d4af5bfec1dbe57fa5';
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/677547d4af5bfec1dbe57fa5/1igh38mf0';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
     <script>
         $(document).ready(function () {
             let currentSubItemIndex = 0;
             let currentSubItems = [];
+            let currentProduto = null;
 
             function carregarCategorias() {
                 const categorias = [...new Set(produtos.map(produto => produto.categoria))];
@@ -368,20 +434,20 @@
                 produtosFiltrados.forEach(produto => {
                     const subItems = produto.subItems || [];
                     let cardContent;
-                    
+
                     if (subItems.length > 0) {
                         if (subItems.some(item => item.imagens && item.imagens.length > 0)) {
-                            const imagensGrid = subItems.map(item => 
-                                item.imagens && item.imagens.length > 0 
+                            const imagensGrid = subItems.map(item =>
+                                item.imagens && item.imagens.length > 0
                                     ? `<img src="images/${item.imagens[0]}" alt="${item.titulo}">`
                                     : `<div class="no-image-placeholder">Em breve imagens</div>`
                             ).join('');
-                            const gridClass = subItems.length <= 1 ? 'grid-1' : 
-                                            subItems.length <= 2 ? 'grid-2' :
-                                            subItems.length <= 3 ? 'grid-3' :
-                                            subItems.length <= 4 ? 'grid-4' :
+                            const gridClass = subItems.length <= 1 ? 'grid-1' :
+                                subItems.length <= 2 ? 'grid-2' :
+                                    subItems.length <= 3 ? 'grid-3' :
+                                        subItems.length <= 4 ? 'grid-4' :
                                             subItems.length <= 6 ? 'grid-6' :
-                                            subItems.length <= 9 ? 'grid-9' : 'grid-12';
+                                                subItems.length <= 9 ? 'grid-9' : 'grid-12';
                             cardContent = `<div class="card-img-grid ${gridClass}">${imagensGrid}</div>`;
                         } else {
                             cardContent = `<div class="no-image-placeholder">Em breve imagens</div>`;
@@ -438,14 +504,14 @@
                 $("#next-sub-item").prop('disabled', currentSubItemIndex === currentSubItems.length - 1);
             }
 
-            $("#prev-sub-item").click(function() {
+            $("#prev-sub-item").click(function () {
                 if (currentSubItemIndex > 0) {
                     currentSubItemIndex--;
                     mostrarSubItem(currentSubItems[currentSubItemIndex]);
                 }
             });
 
-            $("#next-sub-item").click(function() {
+            $("#next-sub-item").click(function () {
                 if (currentSubItemIndex < currentSubItems.length - 1) {
                     currentSubItemIndex++;
                     mostrarSubItem(currentSubItems[currentSubItemIndex]);
@@ -497,6 +563,7 @@
             window.verDetalhes = function (id) {
                 const produto = produtos.find(p => p.id === id);
                 if (produto) {
+                    currentProduto = produto;
                     currentSubItems = produto.subItems || [produto];
                     currentSubItemIndex = 0;
                     mostrarSubItem(currentSubItems[currentSubItemIndex]);
@@ -504,7 +571,44 @@
                 }
             };
 
-            window.mudarImagem = function(index) {
+            window.abrirModalContato = function () {
+                $("#detalhesModal").modal('hide');
+                $("#contatoModal").modal('show');
+            };
+
+            window.abrirModalTelegram = function () {
+                $("#detalhesModal").modal('hide');
+                $("#telegramModal").modal('show');
+            };
+
+            window.criarGrupoTelegram = function () {
+                const nome = $("#nomeTelegram").val();
+
+                if (!nome) {
+                    alert("Por favor, preencha seu nome.");
+                    return;
+                }
+
+                const item = currentSubItems[currentSubItemIndex];
+                const mensagem = `Olá! Gostaria de mais informações sobre o produto:\n\n` +
+                    `Produto: ${item.titulo}\n` +
+                    `Valor: R$ ${item.valor.toFixed(2)}\n` +
+                    `Categoria: ${item.categoria}\n` +
+                    `Estado: ${item.estado}\n\n` +
+                    `Nome do interessado: ${nome}`;
+
+                const numerosSellers = ["+5541999751101", "+5521986204744"];
+                const nomeGrupo = `${item.titulo} - ${nome}`;
+
+                // Como o Telegram não possui uma API web direta para criar grupos,
+                // vamos redirecionar para uma conversa com o primeiro vendedor
+                const urlTelegram = `https://t.me/${numerosSellers[0].replace(/\D/g, '')}`;
+
+                $("#telegramModal").modal('hide');
+                window.open(urlTelegram, '_blank');
+            };
+
+            window.mudarImagem = function (index) {
                 $('#carouselExample').carousel(index);
                 $('.miniatura').removeClass('active');
                 $('.miniatura').eq(index).addClass('active');
@@ -515,13 +619,13 @@
                 $('.miniatura').eq(e.to).addClass('active');
             });
 
-            window.ampliarImagem = function(src) {
+            window.ampliarImagem = function (src) {
                 const container = $("#imagemAmpliada");
                 container.find("img").attr("src", src);
                 container.show();
             }
 
-            $("#imagemAmpliada").click(function() {
+            $("#imagemAmpliada").click(function () {
                 $(this).hide();
             });
 
