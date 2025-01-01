@@ -589,12 +589,15 @@
                 waitForTawkAPI(() => {
                     console.log("Tawk_API carregado. Tentando definir atributos e adicionar tags...");
 
-                    Tawk_API.addEvent('custom-event', {
-                        titulo: "Nome do Produto",
-                        valor: 100.0,
-                        categoria: "Eletrônicos"
-                    });
-                    console.log("Evento personalizado adicionado!");
+                    // Tawk_API.setAttributes({
+                    //     testAttribute: "Teste Atributo"
+                    // }, function (error) {
+                    //     if (error) {
+                    //         console.error("Erro ao definir atributo básico:", error);
+                    //     } else {
+                    //         console.log("Atributo básico definido com sucesso!");
+                    //     }
+                    // }, "eb0347177563df5578f30e4c23bc2717d6ce09f0");
 
                     Tawk_API.addTags([produto.titulo], function (error) {
                         if (error) {
