@@ -165,7 +165,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Transporte",
-        "imagens": ["14-bike-montain-bike-1.jpg", "14-bike-montain-bike-2.jpg"]
+        "imagens": []
     },
     {
         "id": 15,
@@ -189,7 +189,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Transporte",
-        "imagens": ["16-longboard-1.jpg", "16-longboard-2.jpg"]
+        "imagens": []
     },
     {
         "id": 17,
@@ -201,7 +201,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Ferramentas",
-        "imagens": ["17-ferramentas-1.jpg", "17-ferramentas-2.jpg"]
+        "imagens": []
     },
     {
         "id": 18,
@@ -213,7 +213,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Armas",
-        "imagens": ["18-arco-e-flecha-1.jpg", "18-arco-e-flecha-2.jpg"]
+        "imagens": []
     },
     {
         "id": 19,
@@ -225,7 +225,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Armas",
-        "imagens": ["19-crossbow-1.jpg", "19-crossbow-2.jpg"]
+        "imagens": []
     },
     {
         "id": 20,
@@ -237,7 +237,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Armas",
-        "imagens": ["20-armas-airsoft-1.jpg", "20-armas-airsoft-2.jpg"]
+        "imagens": []
     },
     {
         "id": 21,
@@ -249,7 +249,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["21-estante-nichos-1.jpg"]
+        "imagens": []
     },
     {
         "id": 22,
@@ -261,7 +261,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["22-aquecedor-a-oleo-1.jpg"]
+        "imagens": []
     },
     {
         "id": 23,
@@ -273,7 +273,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["23-camera-digital-1.jpg"]
+        "imagens": []
     },
     {
         "id": 24,
@@ -285,7 +285,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["24-mesa-escitorio-madeira-1.jpg"]
+        "imagens": []
     },
     {
         "id": 25,
@@ -297,7 +297,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["25-mesa-escitorio-branca-1.jpg"]
+        "imagens": []
     },
     {
         "id": 26,
@@ -321,7 +321,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["27-mesa-de-jantar-1.webp", "27-mesa-de-jantar-2.webp", "27-mesa-de-jantar-3.webp"]
+        "imagens": []
     },
     {
         "id": 28,
@@ -333,7 +333,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["28-sofa-1.webp"]
+        "imagens": []
     },
     {
         "id": 29,
@@ -345,7 +345,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["29-estante-salas-1.webp"]
+        "imagens": []
     },
     {
         "id": 30,
@@ -357,7 +357,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["30-cama-de-solteiro-1.webp"]
+        "imagens": []
     },
     {
         "id": 31,
@@ -369,7 +369,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["31-cama-king-size-1.webp"]
+        "imagens": []
     },
     {
         "id": 32,
@@ -381,15 +381,15 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["32-tv-smasung-the-frame-1.webp"]
+        "imagens": []
     },
     {
         "id": 33,
         "titulo": "Rede Wi-Fi Deco",
-        "descricao": "Rede Wi-Fi Deco TP-Link",
+        "descricao": "Rede Wi-Fi Deco TP-Link. @ são entrega imediata e os outros 2 são entrega em fevereiro/2025",
         "valor": 2100.00,
         "disponivel": true,
-        "quantidade": 1,
+        "quantidade": 4,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
@@ -405,7 +405,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["34-dvr-com-cameras-e-hd-1.webp"]
+        "imagens": []
     },
     {
         "id": 35,
@@ -417,7 +417,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["35-rolo-de-fio-cat6-1.webp"]
+        "imagens": []
     },
     {
         "id": 36,
@@ -429,7 +429,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["36-computador-gamer-1.webp"]
+        "imagens": []
     },
     {
         "id": 37,
@@ -441,7 +441,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["37-luminaria-1.webp"]
+        "imagens": []
     },
     {
         "id": 38,
@@ -453,7 +453,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["38-alexa-lampadas-inteligentes-1.webp"]
+        "imagens": []
     },
     {
         "id": 39,
@@ -465,7 +465,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["39-impressora-1.webp"]
+        "imagens": []
     },
     {
         "id": 40,
@@ -477,7 +477,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
-        "imagens": ["40-massageador-1.webp"]
+        "imagens": []
     },
     {
         "id": 41,
@@ -489,7 +489,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["41-cadeira-gamer-corsair-1.webp"]
+        "imagens": []
     },
     {
         "id": 42,
@@ -501,7 +501,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Móveis",
-        "imagens": ["42-cadeira-escritorio-1.webp"]
+        "imagens": []
     },
     {
         "id": 43,
@@ -513,7 +513,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["43-geladeira-1.webp"]
+        "imagens": []
     },
     {
         "id": 44,
@@ -525,7 +525,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["44-fogão-1.webp"]
+        "imagens": []
     },
     {
         "id": 45,
@@ -537,7 +537,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["45-microondas-1.webp"]
+        "imagens": []
     },
     {
         "id": 46,
@@ -549,7 +549,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["46-air-fryer-1.webp"]
+        "imagens": []
     },
     {
         "id": 47,
@@ -573,7 +573,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["48-ar-condicionado-portátil-12000-btu-1.webp"]
+        "imagens": []
     },
     {
         "id": 49,
@@ -597,7 +597,7 @@ const produtos = [
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["50-ar-condicionado-portátil-10000-btu-1.webp"]
+        "imagens": []
     },
     {
         "id": 51,
@@ -633,7 +633,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["53-botijão-13kg-1.webp"]
+        "imagens": []
     },
     {
         "id": 54,
@@ -645,7 +645,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["54-roteador-com-loadbalancer-1.webp"]
+        "imagens": []
     },
     {
         "id": 55,
@@ -657,7 +657,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["55-aspirador-de-pó-profissional-1.webp"]
+        "imagens": []
     },
     {
         "id": 56,
@@ -669,7 +669,7 @@ const produtos = [
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
-        "imagens": ["56-bota-de-relaxamento-das-pernas-1.webp"]
+        "imagens": ["56-bota-de-relaxamento-das-pernas-1.jpeg", "56-bota-de-relaxamento-das-pernas-2.jpeg"]
     },
     {
         "id": 57,
