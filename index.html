@@ -576,37 +576,39 @@
             window.abrirModalContato = function () {
                 const produto = currentSubItems[currentSubItemIndex]; // Detalhes do produto atual
 
-                // Aguarde o carregamento do Tawk.to
                 if (typeof Tawk_API !== "undefined") {
-                    // Adicionar tags ao chat
-                    Tawk_API.addTags([produto.titulo], function (error) {
-                        if (error) {
-                            console.error("Erro ao adicionar tags no Tawk.to:", error);
-                        } else {
-                            console.log("Tags adicionadas com sucesso:", produto.titulo);
-                        }
-                    });
+                    Tawk_API.onLoad = function () {
+                        // Autenticar usando a API Key
+                        Tawk_API.setAttributes({
+                            titulo: produto.titulo,
+                            valor: produto.valor.toFixed(2),
+                            categoria: produto.categoria,
+                            estado: produto.estado
+                        }, function (error) {
+                            if (error) {
+                                console.error("Erro ao definir atributos no Tawk.to:", error);
+                            } else {
+                                console.log("Atributos definidos com sucesso:", produto);
+                            }
+                        }, "eb0347177563df5578f30e4c23bc2717d6ce09f0"); // Substitua YOUR_API_KEY pela sua JavaScript API Key
 
-                    // Definir atributos personalizados
-                    Tawk_API.setAttributes({
-                        titulo: produto.titulo,
-                        valor: produto.valor.toFixed(2),
-                        categoria: produto.categoria,
-                        estado: produto.estado
-                    }, function (error) {
-                        if (error) {
-                            console.error("Erro ao definir atributos no Tawk.to:", error);
-                        } else {
-                            console.log("Atributos definidos com sucesso:", produto);
-                        }
-                    });
+                        // Adicionar tags ao chat
+                        Tawk_API.addTags([produto.titulo], function (error) {
+                            if (error) {
+                                console.error("Erro ao adicionar tags no Tawk.to:", error);
+                            } else {
+                                console.log("Tags adicionadas com sucesso:", produto.titulo);
+                            }
+                        });
+                    };
                 } else {
-                    console.error("Tawk.to não está disponível.");
+                    console.error("Tawk_API não está disponível.");
                 }
 
                 $("#detalhesModal").modal('hide');
-                $("#contatoModal").modal('show'); // Abre o modal do Tawk.to
+                $("#contatoModal").modal('show');
             };
+
 
             window.abrirModalTelegram = function () {
                 $("#detalhesModal").modal('hide');
