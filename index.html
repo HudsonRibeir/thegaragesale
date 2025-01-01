@@ -585,7 +585,7 @@
             function generateTawkHash(visitorId) {
                 const visitorId = "visitante@email.com"; // Substitua pelo ID do visitante
 
-                fetch(`https://<your-project-name>.vercel.app/api/generate-hash?visitorId=${visitorId}`)
+                fetch(`https://garage-sale-stel-hud.vercel.app/api/generate-hash?visitorId=${visitorId}`)
                     .then(response => response.json())
                     .then(data => {
                         const hash = data.hash;
