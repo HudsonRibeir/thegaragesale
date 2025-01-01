@@ -10,7 +10,7 @@ export default function handler(req, res) {
     console.log("SECRET_KEY manual:", process.env.SECRET_KEY);
 
 
-    const secretKey = process.env.SECRET_KEY;
+    const secretKey = "eb0347177563df5578f30e4c23bc2717d6ce09f0";
     if (!secretKey) {
         console.error("SECRET_KEY não configurada");
         return res.status(500).json({ error: "SECRET_KEY is not set" });
