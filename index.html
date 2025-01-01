@@ -292,7 +292,7 @@
     </div>
 
     <!-- Modal de Detalhes -->
-    <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+    <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -335,16 +335,14 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via Chat</a>
-                    <!-- <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via WhatsApp</a>
-                    <a href="#" id="detalhe-telegram" class="btn btn-telegram" onclick="abrirModalTelegram(); return false;">Contatar via Telegram</a> -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Contato WhatsApp -->
-    <div class="modal fade" id="contatoModal" tabindex="-1" aria-labelledby="contatoModalLabel" aria-hidden="true">
+    <!-- Modal de Contato -->
+    <div class="modal fade" id="contatoModal" tabindex="-1" aria-labelledby="contatoModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -352,31 +350,42 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id='tawk_677547d4af5bfec1dbe57fa5'></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Contato Telegram -->
-    <div class="modal fade" id="telegramModal" tabindex="-1" aria-labelledby="telegramModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="telegramModalLabel">Informações para Telegram</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="telegramForm">
+                    <form id="contatoForm">
                         <div class="mb-3">
-                            <label for="nomeTelegram" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="nomeTelegram" required>
+                            <label for="nome" class="form-label">Nome *</label>
+                            <input type="text" class="form-control" id="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="whatsapp" class="form-label">WhatsApp</label>
+                            <input type="tel" class="form-control" id="whatsapp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                        <div class="text-danger" id="formError" style="display: none;">
+                            Por favor, informe pelo menos um meio de contato (WhatsApp ou Email)
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-telegram" onclick="criarGrupoTelegram()">Confirmar</button>
+                    <button type="button" class="btn btn-primary" onclick="iniciarChat()">Iniciar Chat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal deChat -->
+    <div class="modal fade" id="chatModal" tabindex="-2" aria-labelledby="chatModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id='tawk_677547d4af5bfec1dbe57fa5'></div>
                 </div>
             </div>
         </div>
@@ -573,24 +582,35 @@
                 }
             };
 
-            function waitForTawkAPI(callback) {
-                if (typeof Tawk_API !== "undefined") {
-                    callback();
-                } else {
-                    console.log("Aguardando Tawk_API...");
-                    setTimeout(() => waitForTawkAPI(callback), 500);
-                }
-            }
-
             window.abrirModalContato = function () {
+                $("#detalhesModal").modal('hide');
+                $("#contatoForm")[0].reset();
+                $("#formError").hide();
+                $("#contatoModal").modal('show');
+            };
+
+            window.iniciarChat = function () {
+                const nome = $("#nome").val();
+                const whatsapp = $("#whatsapp").val();
+                const email = $("#email").val();
+
+                if (!nome) {
+                    $("#formError").text("Por favor, informe seu nome").show();
+                    return;
+                }
+
+                if (!whatsapp && !email) {
+                    $("#formError").text("Por favor, informe pelo menos um meio de contato (WhatsApp ou Email)").show();
+                    return;
+                }
+
                 const produto = currentSubItems[currentSubItemIndex];
-                console.log("Abrindo modal de contato");
 
                 waitForTawkAPI(() => {
-                    console.log("Tawk_API carregado. Tentando definir atributos e adicionar tags...");
-
                     Tawk_API.setAttributes({
-                        "name": "Nome do Visitante",
+                        "name": nome,
+                        "email": email || "",
+                        "whatsapp": whatsapp || "",
                         "titulo": produto.titulo,
                         "valor": produto.valor.toFixed(2),
                         "categoria": produto.categoria
@@ -611,43 +631,17 @@
                     });
                 });
 
-                $("#detalhesModal").modal('hide');
-                $("#contatoModal").modal('show');
+                $("#contatoModal").modal('hide');
+                $("#chatModal").modal('show');
             };
 
-
-
-            window.abrirModalTelegram = function () {
-                $("#detalhesModal").modal('hide');
-                $("#telegramModal").modal('show');
-            };
-
-            window.criarGrupoTelegram = function () {
-                const nome = $("#nomeTelegram").val();
-
-                if (!nome) {
-                    alert("Por favor, preencha seu nome.");
-                    return;
+            function waitForTawkAPI(callback) {
+                if (typeof Tawk_API !== "undefined") {
+                    callback();
+                } else {
+                    setTimeout(() => waitForTawkAPI(callback), 500);
                 }
-
-                const item = currentSubItems[currentSubItemIndex];
-                const mensagem = `Olá! Gostaria de mais informações sobre o produto:\n\n` +
-                    `Produto: ${item.titulo}\n` +
-                    `Valor: R$ ${item.valor.toFixed(2)}\n` +
-                    `Categoria: ${item.categoria}\n` +
-                    `Estado: ${item.estado}\n\n` +
-                    `Nome do interessado: ${nome}`;
-
-                const numerosSellers = ["+5541999751101", "+5521986204744"];
-                const nomeGrupo = `${item.titulo} - ${nome}`;
-
-                // Como o Telegram não possui uma API web direta para criar grupos,
-                // vamos redirecionar para uma conversa com o primeiro vendedor
-                const urlTelegram = `https://t.me/${numerosSellers[0].replace(/\D/g, '')}`;
-
-                $("#telegramModal").modal('hide');
-                window.open(urlTelegram, '_blank');
-            };
+            }
 
             window.mudarImagem = function (index) {
                 $('#carouselExample').carousel(index);
