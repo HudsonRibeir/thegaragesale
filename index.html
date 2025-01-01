@@ -585,24 +585,34 @@
             function generateTawkHash(visitorId) {
 
                 fetch(`https://garagesale-kappa.vercel.app/api/generate-hash?visitorId=${visitorId}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log("Resposta da API:", response);
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log("Dados recebidos da API:", data);
                         const hash = data.hash;
 
-                        if (typeof Tawk_API !== "undefined") {
-                            Tawk_API.setAttributes({
-                                name: "Nome do Visitante",
-                                email: visitorId
-                            }, function (error) {
-                                if (error) {
-                                    console.error("Erro ao definir atributos no Tawk.to:", error);
-                                } else {
-                                    console.log("Atributos definidos com sucesso!");
-                                }
-                            }, hash);
+                        if (typeof hash === "undefined") {
+                            console.error("Hash não foi gerado ou recebido corretamente.");
+                        } else {
+                            console.log("Hash gerado:", hash);
+
+                            if (typeof Tawk_API !== "undefined") {
+                                Tawk_API.setAttributes({
+                                    name: "Nome do Visitante",
+                                    email: visitorId
+                                }, function (error) {
+                                    if (error) {
+                                        console.error("Erro ao definir atributos no Tawk.to:", error);
+                                    } else {
+                                        console.log("Atributos definidos com sucesso!");
+                                    }
+                                }, hash);
+                            }
                         }
                     })
-                    .catch(error => console.error("Erro ao gerar o hash:", error));
+                    .catch(error => console.error("Erro ao chamar a API:", error));
             }
 
             window.abrirModalContato = function () {

@@ -1,10 +1,13 @@
-const crypto = require('crypto');
+
 
 export default function handler(req, res) {
     console.log("Iniciando geração do hash...");
 
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Permite requisições de qualquer origem
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); // Métodos permitidos
+    const crypto = require('crypto');
 
-    const secretKey = "eb0347177563df5578f30e4c23bc2717d6ce09f0";
+    const secretKey = process.env.SECRET_KEY;
     if (!secretKey) {
         console.error("SECRET_KEY não configurada");
         return res.status(500).json({ error: "SECRET_KEY is not set" });
