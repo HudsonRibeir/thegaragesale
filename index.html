@@ -250,6 +250,14 @@
     <div class="container my-5">
         <h1 class="text-center mb-4">Garage Sale Hudson e Sthefanny</h1>
         <p class="text-center mb-4">Estamos nos mudando para outro país e por isso estamos vendendo muitas coisas. Confira abaixo!</p>
+
+        <!-- Botão de Perfil -->
+        <div class="text-end mb-4">
+            <button id="btnPerfil" class="btn btn-outline-primary">
+                <span id="perfilStatus">Meus Dados</span>
+            </button>
+        </div>
+
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
                 <input type="text" id="filtro-produtos" class="form-control" placeholder="Procure um produto...">
@@ -322,7 +330,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="detalhe-chat" class="btn btn-success" onclick="abrirModalContato(); return false;">Contatar via Chat</a>
+                    <a href="#" id="detalhe-chat" class="btn btn-success" onclick="abrirChat(); return false;">Contatar via Chat</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
@@ -357,8 +365,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="apagarDadosContato()">Apagar Dados</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="iniciarChat()">Iniciar Chat</button>
+                    <button type="button" class="btn btn-primary" onclick="salvarDadosContato()">Salvar</button>
                 </div>
             </div>
         </div>
@@ -405,6 +414,114 @@
             let currentSubItemIndex = 0;
             let currentSubItems = [];
             let currentProduto = null;
+            let dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
+
+            // Atualiza o status do botão de perfil
+            function atualizarBotaoPerfil() {
+                const btnPerfil = $("#btnPerfil");
+                if (dadosUsuario.nome) {
+                    btnPerfil.html(`<i class="fas fa-user"></i> ${dadosUsuario.nome}`);
+                } else {
+                    btnPerfil.text("Cadastrar Dados");
+                }
+            }
+
+            $("#btnPerfil").click(function () {
+                if (dadosUsuario.nome) {
+                    // Preenche o formulário com os dados existentes
+                    $("#nome").val(dadosUsuario.nome);
+                    $("#whatsapp").val(dadosUsuario.whatsapp);
+                    $("#email").val(dadosUsuario.email);
+                }
+                $("#contatoModal").modal('show');
+            });
+
+            window.apagarDadosContato = function () {
+                if (confirm("Tem certeza que deseja apagar seus dados?")) {
+                    localStorage.removeItem('dadosUsuario');
+                    dadosUsuario = {};
+                    $("#nome").val('');
+                    $("#whatsapp").val('');
+                    $("#email").val('');
+                    atualizarBotaoPerfil();
+                    $("#contatoModal").modal('hide');
+                }
+            };
+
+            window.salvarDadosContato = function () {
+                const nome = $("#nome").val();
+                const whatsapp = $("#whatsapp").val();
+                const email = $("#email").val();
+
+                if (!nome) {
+                    $("#formError").text("Por favor, informe seu nome").show();
+                    return;
+                }
+
+                if (!whatsapp && !email) {
+                    $("#formError").text("Por favor, informe pelo menos um meio de contato (WhatsApp ou Email)").show();
+                    return;
+                }
+
+                dadosUsuario = { nome, whatsapp, email };
+                localStorage.setItem('dadosUsuario', JSON.stringify(dadosUsuario));
+
+                $("#contatoModal").modal('hide');
+                atualizarBotaoPerfil();
+
+                // Se o modal foi aberto pelo chat, abre o chat após salvar os dados
+                if (window.abrirChatAposSalvar) {
+                    window.abrirChatAposSalvar = false;
+                    abrirChatModal();
+                }
+            };
+
+            function abrirChatModal() {
+
+                let dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
+                const produto = currentSubItems[currentSubItemIndex];
+
+                waitForTawkAPI(() => {
+                    Tawk_API.setAttributes({
+                        "name": dadosUsuario.nome,
+                        "email": dadosUsuario.email || "",
+                        "phone": dadosUsuario.whatsapp || "",
+                        "produto": produto.titulo,
+                        "valor": produto.valor.toFixed(2),
+                        "categoria": produto.categoria
+                    }, function (error) {
+                        if (error) {
+                            console.error("Erro ao definir atributos no Tawk.to:", error);
+                        } else {
+                            console.log("Atributos definidos com sucesso!");
+                        }
+                    });
+
+                    Tawk_API.addTags([produto.titulo], function (error) {
+                        if (error) {
+                            console.error("Erro ao adicionar tags no Tawk.to:", error);
+                        } else {
+                            console.log("Tags adicionadas com sucesso:", produto.titulo);
+                        }
+                    });
+                });
+
+                $("#contatoModal").modal('hide');
+                $("#chatModal").modal('show');
+            }
+
+            window.abrirChat = function () {
+                $("#detalhesModal").modal('hide');
+
+                if (dadosUsuario == null || dadosUsuario.nome == null) {
+                    window.abrirChatAposSalvar = true;
+
+                    $("#contatoModal").modal('show');
+                    return;
+                }
+
+                abrirChatModal();
+            };
 
             function carregarCategorias() {
                 const categorias = [...new Set(produtos.map(produto => produto.categoria))];
@@ -570,59 +687,6 @@
                 }
             };
 
-            window.abrirModalContato = function () {
-                $("#detalhesModal").modal('hide');
-                $("#contatoForm")[0].reset();
-                $("#formError").hide();
-                $("#contatoModal").modal('show');
-            };
-
-            window.iniciarChat = function () {
-                const nome = $("#nome").val();
-                const whatsapp = $("#whatsapp").val();
-                const email = $("#email").val();
-
-                if (!nome) {
-                    $("#formError").text("Por favor, informe seu nome").show();
-                    return;
-                }
-
-                if (!whatsapp && !email) {
-                    $("#formError").text("Por favor, informe pelo menos um meio de contato (WhatsApp ou Email)").show();
-                    return;
-                }
-
-                const produto = currentSubItems[currentSubItemIndex];
-
-                waitForTawkAPI(() => {
-                    Tawk_API.setAttributes({
-                        "name": nome,
-                        "email": email || "",
-                        "phone": whatsapp || "",
-                        "produto": produto.titulo,
-                        "valor": produto.valor.toFixed(2),
-                        "categoria": produto.categoria
-                    }, function (error) {
-                        if (error) {
-                            console.error("Erro ao definir atributos no Tawk.to:", error);
-                        } else {
-                            console.log("Atributos definidos com sucesso!");
-                        }
-                    });
-
-                    Tawk_API.addTags([produto.titulo], function (error) {
-                        if (error) {
-                            console.error("Erro ao adicionar tags no Tawk.to:", error);
-                        } else {
-                            console.log("Tags adicionadas com sucesso:", produto.titulo);
-                        }
-                    });
-                });
-
-                $("#contatoModal").modal('hide');
-                $("#chatModal").modal('show');
-            };
-
             function waitForTawkAPI(callback) {
                 if (typeof Tawk_API !== "undefined") {
                     callback();
@@ -654,6 +718,7 @@
 
             carregarCategorias();
             carregarProdutos();
+            atualizarBotaoPerfil();
         });
     </script>
 </body>
