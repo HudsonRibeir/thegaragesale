@@ -576,6 +576,8 @@
             window.abrirModalContato = function () {
                 const produto = currentSubItems[currentSubItemIndex]; // Detalhes do produto atual
 
+                console.log("Abrindo modal de contato");
+
                 if (typeof Tawk_API !== "undefined") {
                     Tawk_API.onLoad = function () {
                         // Autenticar usando a API Key
