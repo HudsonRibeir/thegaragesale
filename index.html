@@ -586,11 +586,6 @@
                 const produto = currentSubItems[currentSubItemIndex];
                 console.log("Abrindo modal de contato");
 
-                const visitorId = "visitante@email.com"; // Substitua pelo ID do visitante
-                let hash = "01f90e6a21c84630d23bb1262ed2c5212979917bc4b445656d810ef78111961f";
-
-                console.log("Hash gerado manualmente:", hash);
-
                 waitForTawkAPI(() => {
                     console.log("Tawk_API carregado. Tentando definir atributos e adicionar tags...");
 
@@ -605,7 +600,7 @@
                         } else {
                             console.log("Atributos definidos com sucesso!");
                         }
-                    }); // Passa o hash aqui
+                    });
 
                     Tawk_API.addTags([produto.titulo], function (error) {
                         if (error) {
