@@ -11,7 +11,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": ["01-tv-samsung-50-polegadas-1.jpeg", "01-tv-samsung-50-polegadas-2.jpeg", "01-tv-samsung-50-polegadas-3.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "Taci"
+        "reservadoPara": "Taci",
+        "entregue": false,
+        "pago": true
     },
     {
         "id": 2,
@@ -25,7 +27,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["02-closet-1.jpeg", "02-closet-2.jpeg", "02-closet-3.jpeg", "02-closet-4.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 3,
@@ -39,7 +43,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["03-closet-1.jpeg", "03-closet-2.jpeg", "03-closet-3.jpeg", "03-closet-4.jpeg", "03-closet-5.jpeg", "03-closet-6.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 4,
@@ -53,7 +59,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["04-gaveteiro-branco-1.jpeg", "04-gaveteiro-branco-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 5,
@@ -67,7 +75,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["05-gaveteiro-marrom-1.jpg", "05-gaveteiro-marrom-.jpg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 6,
@@ -81,7 +91,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["06-poltrona-reclinavel-1.jpeg", "06-poltrona-reclinavel-2.jpeg", "06-poltrona-reclinavel-3.jpeg", "06-poltrona-reclinavel-4.jpeg", "06-poltrona-reclinavel-5.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 7,
@@ -95,7 +107,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["07-microondas-1.jpeg", "07-microondas-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 8,
@@ -109,7 +123,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["08-maquina-cafe-3-coracoes-1.webp", "08-maquina-cafe-3-coracoes-2.webp", "08-maquina-cafe-3-coracoes-3.webp"],
         "precoCerto": true,
-        "reservadoPara": "Harley"
+        "reservadoPara": "Harley",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 9,
@@ -123,7 +139,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": ["09-playstation-4-1.webp", "09-playstation-4-2.webp", "09-playstation-4-3.webp"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 10,
@@ -137,7 +155,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": ["10-playstation-3-1.webp"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 11,
@@ -151,7 +171,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": ["11-nintendo-wii-1.webp", "11-nintendo-wii-2.webp"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 12,
@@ -165,7 +187,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": ["12-super-nintendo-1.webp"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 13,
@@ -179,7 +203,9 @@ const produtos = [
         "categoria": "Ferramentas",
         "imagens": ["13-maquina-cortar-madeira-1.webp"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 14,
@@ -193,7 +219,9 @@ const produtos = [
         "categoria": "Transporte",
         "imagens": ["14-bike-montain-1.jpeg", "14-bike-montain-2.jpeg", "14-bike-montain-3.jpeg", "14-bike-montain-4.jpeg", "14-bike-montain-5.jpeg", "14-bike-montain-6.jpeg", "14-bike-montain-7.jpeg"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 15,
@@ -206,8 +234,10 @@ const produtos = [
         "estado": "Usado",
         "categoria": "Transporte",
         "imagens": ["15-bike-speed-1.jpeg", "15-bike-speed-2.jpeg", "15-bike-speed-3.jpeg", "15-bike-speed-4.jpeg"],
-        "precoCerto": false,
-        "reservadoPara": ""
+        "precoCerto": true,
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 16,
@@ -221,7 +251,9 @@ const produtos = [
         "categoria": "Transporte",
         "imagens": ["16-longboard-1.jpeg", "16-longboard-2.jpeg", "16-longboard-3.jpeg", "16-longboard-4.jpeg", "16-longboard-5.jpeg", "16-longboard-6.jpeg", "16-longboard-7.jpeg", "16-longboard-8.jpeg"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 17,
@@ -235,7 +267,9 @@ const produtos = [
         "categoria": "Ferramentas",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 18,
@@ -249,7 +283,9 @@ const produtos = [
         "categoria": "Armas",
         "imagens": ["18-arco-e-flecha-1.jpeg", "18-arco-e-flecha-2.jpeg", "18-arco-e-flecha-3.jpeg", "18-arco-e-flecha-4.jpeg", "18-arco-e-flecha-5.jpeg", "18-arco-e-flecha-6.jpeg", "18-arco-e-flecha-7.jpeg"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 19,
@@ -263,7 +299,9 @@ const produtos = [
         "categoria": "Armas",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 20,
@@ -277,7 +315,9 @@ const produtos = [
         "categoria": "Armas",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 21,
@@ -290,7 +330,9 @@ const produtos = [
         "estado": "Usado",
         "categoria": "Móveis",
         "imagens": [],
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 22,
@@ -304,7 +346,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 23,
@@ -318,7 +362,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 24,
@@ -332,7 +378,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 25,
@@ -346,7 +394,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 26,
@@ -360,7 +410,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["26-mesa-regulagem-de-altura-1.webp", "26-mesa-regulagem-de-altura-2.webp", "26-mesa-regulagem-de-altura-3.webp"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 27,
@@ -374,7 +426,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 28,
@@ -388,7 +442,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 29,
@@ -402,7 +458,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 30,
@@ -416,7 +474,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 31,
@@ -430,35 +490,41 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 32,
         "titulo": "TV Samsung The Frame",
         "descricao": "TV Samsung The Frame 4K 55 polegadas",
         "valor": 2300.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
         "imagens": ["32-tv-the-frame-1.jpeg", "32-tv-the-frame-2.jpeg", "32-tv-the-frame-3.jpeg", "32-tv-the-frame-4.jpeg", "32-tv-the-frame-5.jpeg", "32-tv-the-frame-6.jpeg", "32-tv-the-frame-7.jpeg", "32-tv-the-frame-8.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "Sthu",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 33,
         "titulo": "Rede Wi-Fi Deco",
-        "descricao": "Rede Wi-Fi Deco TP-Link. @ são entrega imediata e os outros 2 são entrega em fevereiro/2025",
+        "descricao": "Rede Wi-Fi Deco TP-Link.",
         "valor": 300.00,
         "disponivel": true,
-        "quantidade": 4,
-        "dataEntrega": "Imediata",
+        "quantidade": 2,
+        "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrônicos",
         "imagens": ["33-rede-wi-fi-deco-1.jpeg", "33-rede-wi-fi-deco-2.jpeg", "33-rede-wi-fi-deco-3.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 34,
@@ -472,7 +538,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 35,
@@ -486,7 +554,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 36,
@@ -500,21 +570,25 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": "Keith"
+        "reservadoPara": "Keith",
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 37,
         "titulo": "Luminária",
         "descricao": "Luminária",
         "valor": 150.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "Sthu",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 38,
@@ -528,7 +602,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 39,
@@ -542,7 +618,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 40,
@@ -556,7 +634,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 41,
@@ -570,7 +650,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 42,
@@ -584,7 +666,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 43,
@@ -598,7 +682,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": "Silvia"
+        "reservadoPara": "Silvia",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 44,
@@ -612,7 +698,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 45,
@@ -626,7 +714,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 46,
@@ -640,7 +730,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": "Silvia"
+        "reservadoPara": "Silvia",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 47,
@@ -654,7 +746,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["47-ar-condicionado-portátil-12000-btu-1.jpeg", "47-ar-condicionado-portátil-12000-btu-2.jpeg", "47-ar-condicionado-portátil-12000-btu-3.jpeg", "47-ar-condicionado-portátil-12000-btu-4.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 48,
@@ -668,7 +762,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 49,
@@ -682,7 +778,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["49-ar-condicionado-portátil-10000-btu-1.jpeg", "49-ar-condicionado-portátil-10000-btu-2.jpeg", "49-ar-condicionado-portátil-10000-btu-3.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "Harley"
+        "reservadoPara": "Harley",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 50,
@@ -696,7 +794,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["49-ar-condicionado-portátil-10000-btu-1.jpeg", "49-ar-condicionado-portátil-10000-btu-2.jpeg", "49-ar-condicionado-portátil-10000-btu-3.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 51,
@@ -710,7 +810,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["51-pressurizador-1.jpeg", "51-pressurizador-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 52,
@@ -724,7 +826,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["52-aquecedor-de-água-de-passagem-à-gás-1.jpeg", "52-aquecedor-de-água-de-passagem-à-gás-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 53,
@@ -738,7 +842,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 54,
@@ -752,7 +858,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 55,
@@ -766,7 +874,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 56,
@@ -780,7 +890,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["56-bota-de-relaxamento-das-pernas-1.jpeg", "56-bota-de-relaxamento-das-pernas-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 57,
@@ -794,7 +906,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["57-quadro-1.jpeg", "57-quadro-2.jpeg", "57-quadro-3.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 58,
@@ -808,7 +922,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["58-maquina-de-lavar-roupa-1.jpeg", "58-maquina-de-lavar-roupa-2.jpeg", "58-maquina-de-lavar-roupa-3.jpeg", "58-maquina-de-lavar-roupa-4.jpeg", "58-maquina-de-lavar-roupa-5.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "Stan"
+        "reservadoPara": "Stan",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 59,
@@ -822,7 +938,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["59-frigobar-1.jpeg", "59-frigobar-2.jpeg", "59-frigobar-3.jpeg"],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 60,
@@ -836,7 +954,9 @@ const produtos = [
         "categoria": "Eletrodomésticos",
         "imagens": ["60-arvore-de-natal-1.jpeg", "60-arvore-de-natal-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "Juliana"
+        "reservadoPara": "Juliana",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 61,
@@ -859,7 +979,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-1-fallout-4-1.png"]
+                "imagens": ["61-1-fallout-4-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-2",
@@ -871,7 +994,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-2-horizon-zero-dawn-1.png"]
+                "imagens": ["61-2-horizon-zero-dawn-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-3",
@@ -883,7 +1009,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-3-demon-slayer-1.png"]
+                "imagens": ["61-3-demon-slayer-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-4",
@@ -895,7 +1024,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-4-assassins-creed-origins-1.png"]
+                "imagens": ["61-4-assassins-creed-origins-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-5",
@@ -907,7 +1039,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-5-spider-man-1.png"]
+                "imagens": ["61-5-spider-man-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-6",
@@ -919,7 +1054,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-6-crash-bandicoot-n-sane-trilogy-1.png"]
+                "imagens": ["61-6-crash-bandicoot-n-sane-trilogy-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-7",
@@ -931,7 +1069,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-7-red-dead-redemption-2-1.png"]
+                "imagens": ["61-7-red-dead-redemption-2-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-8",
@@ -943,7 +1084,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-8-uncharted-the-nathan-drake-collection-1.png"]
+                "imagens": ["61-8-uncharted-the-nathan-drake-collection-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-9",
@@ -955,7 +1099,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-9-mortal-kombat-xl-1.png"]
+                "imagens": ["61-9-mortal-kombat-xl-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-10",
@@ -967,7 +1114,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-10-south-park-a-fenda-que-abunda-a-força-1.png"]
+                "imagens": ["61-10-south-park-a-fenda-que-abunda-a-força-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-11",
@@ -979,7 +1129,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-11-fifa-17-1.png"]
+                "imagens": ["61-11-fifa-17-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-12",
@@ -991,7 +1144,10 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-12-the-last-guardian-1.png"]
+                "imagens": ["61-12-the-last-guardian-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             },
             {
                 "id": "61-13",
@@ -1003,11 +1159,16 @@ const produtos = [
                 "dataEntrega": "Imediata",
                 "estado": "Usado",
                 "categoria": "Jogos",
-                "imagens": ["61-13-uncharted-4-a-thiefs-end-1.png"]
+                "imagens": ["61-13-uncharted-4-a-thiefs-end-1.png"],
+                "reservadoPara": "",
+                "entregue": false,
+                "pago": false
             }
         ],
         "precoCerto": false,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 62,
@@ -1021,7 +1182,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["62-estante-marrom-e-amarelo-1.jpeg", "62-estante-marrom-e-amarelo-2.jpeg", "62-estante-marrom-e-amarelo-3.jpeg", "62-estante-marrom-e-amarelo-4.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 63,
@@ -1035,7 +1198,9 @@ const produtos = [
         "categoria": "Eletrônicos",
         "imagens": ["63-celular-android-poco-x6-pro-1.jpeg", "63-celular-android-poco-x6-pro-2.jpeg", "63-celular-android-poco-x6-pro-3.jpeg", "63-celular-android-poco-x6-pro-4.jpeg", "63-celular-android-poco-x6-pro-5.jpeg", "63-celular-android-poco-x6-pro-6.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 64,
@@ -1049,7 +1214,9 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": ["64-cabideiro-1.jpeg", "64-cabideiro-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "Harley"
+        "reservadoPara": "Harley",
+        "entregue": false,
+        "pago": false
     },
     {
         "id": 65,
@@ -1063,6 +1230,40 @@ const produtos = [
         "categoria": "Móveis",
         "imagens": [],
         "precoCerto": true,
-        "reservadoPara": "Silvia"
-    }
+        "reservadoPara": "Silvia",
+        "entregue": false,
+        "pago": false
+    },
+    {
+        "id": 66,
+        "titulo": "Tapete",
+        "descricao": "Tapete",
+        "valor": 150.00,
+        "disponivel": false,
+        "quantidade": 1,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Móveis",
+        "imagens": [],
+        "precoCerto": true,
+        "reservadoPara": "Sthu",
+        "entregue": false,
+        "pago": false
+    },
+    {
+        "id": 67,
+        "titulo": "Rede Wi-Fi Deco",
+        "descricao": "Rede Wi-Fi Deco TP-Link.",
+        "valor": 300.00,
+        "disponivel": false,
+        "quantidade": 2,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Eletrônicos",
+        "imagens": ["33-rede-wi-fi-deco-1.jpeg", "33-rede-wi-fi-deco-2.jpeg", "33-rede-wi-fi-deco-3.jpeg"],
+        "precoCerto": true,
+        "reservadoPara": "Sthu",
+        "entregue": false,
+        "pago": false
+    },
 ];
