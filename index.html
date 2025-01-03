@@ -589,6 +589,10 @@
                     const subItems = produto.subItems || [];
                     let cardContent;
 
+                    if (produto.precoCerto === false) {
+                        return;
+                    }
+
                     if (subItems.length > 0) {
                         if (subItems.some(item => item.imagens && item.imagens.length > 0)) {
                             const imagensGrid = subItems.map(item =>
@@ -621,7 +625,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
-                                    ${subItems.length > 0 ? '' : `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>`}
+                                    ${subItems.length > 0 ? '' : produto.valor > 0 ? `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>` : `<p class="card-text">Doação</p>`}
                                     <p class="card-text">Quantidade: ${subItems.length > 0 ? subItems.length + ' itens' : produto.quantidade}</p>
                                     <p class="card-text ${produto.disponivel ? 'text-success' : 'text-danger'}">
                                         ${produto.disponivel ? 'Disponível' : 'Reservado'}
