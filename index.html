@@ -268,6 +268,9 @@
 
         <!-- Botão de Perfil -->
         <div class="text-end mb-4">
+            <button id="btnChat" class="btn btn-outline-primary" disabled>
+                <span id="abrirChat" onclick="abrirChatModal()">Chat</span>
+            </button>
             <button id="btnPerfil" class="btn btn-outline-primary">
                 <span id="perfilStatus">Meus Dados</span>
             </button>
@@ -509,6 +512,7 @@
                 if (window.abrirChatAposSalvar) {
                     window.abrirChatAposSalvar = false;
                     abrirChatModal();
+                    $("#btnChat").prop("disabled", false);
                 }
             };
 
