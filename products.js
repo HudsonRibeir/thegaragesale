@@ -591,14 +591,14 @@ const produtos = [
         "titulo": "Geladeira",
         "descricao": "Geladeira",
         "valor": 1500.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
         "imagens": [],
-        "precoCerto": false,
-        "reservadoPara": ""
+        "precoCerto": true,
+        "reservadoPara": "Silvia"
     },
     {
         "id": 44,
@@ -633,14 +633,14 @@ const produtos = [
         "titulo": "Air Fryer",
         "descricao": "Air Fryer",
         "valor": 150.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
         "imagens": [],
-        "precoCerto": false,
-        "reservadoPara": ""
+        "precoCerto": true,
+        "reservadoPara": "Silvia"
     },
     {
         "id": 47,
@@ -801,14 +801,14 @@ const produtos = [
         "titulo": "Máquina Lava e Seca Samsung",
         "descricao": "Máquina de lavar roupa Samsung, Lava e Seca, 10kg/6KG",
         "valor": 1700.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
         "imagens": ["58-maquina-de-lavar-roupa-1.jpeg", "58-maquina-de-lavar-roupa-2.jpeg", "58-maquina-de-lavar-roupa-3.jpeg", "58-maquina-de-lavar-roupa-4.jpeg", "58-maquina-de-lavar-roupa-5.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "Stan"
     },
     {
         "id": 59,
@@ -1050,5 +1050,19 @@ const produtos = [
         "imagens": ["64-cabideiro-1.jpeg", "64-cabideiro-2.jpeg"],
         "precoCerto": true,
         "reservadoPara": "Harley"
+    },
+    {
+        "id": 65,
+        "titulo": "Torradeira",
+        "descricao": "Torradeira",
+        "valor": 0.00,
+        "disponivel": false,
+        "quantidade": 1,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Móveis",
+        "imagens": [],
+        "precoCerto": true,
+        "reservadoPara": "Silvia"
     }
 ];

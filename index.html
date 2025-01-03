@@ -331,9 +331,11 @@
 
                     <h2 id="detalhe-titulo" class="text-primary">Produto</h2>
                     <p><strong>Descrição:</strong> <span id="detalhe-descricao"></span></p>
-                    <p><strong>Valor:</strong> R$ <span id="detalhe-valor"></span></p>
+                    <div id="detalhe-valor-container">
+                        <p><strong>Valor:</strong> R$ <span id="detalhe-valor"></span></p>
+                    </div>
                     <p><strong>Quantidade:</strong> <span id="detalhe-quantidade"></span></p>
-                    <p><strong>Disponibilidade:</strong> <span id="detalhe-disponibilidade"></span></p>
+                    <p><strong>Disponibilidade:</strong> <span id="detalhe-disponibilidade" class=""></span></p>
                     <p><strong>Data de Entrega:</strong> <span id="detalhe-data"></span></p>
                     <p><strong>Estado:</strong> <span id="detalhe-estado"></span></p>
                     <p><strong>Categoria:</strong> <span id="detalhe-categoria"></span></p>
@@ -345,7 +347,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" id="detalhe-chat" class="btn btn-success" onclick="abrirChat(); return false;">Contatar via Chat</a>
+                    <div id="detalhe-chat-container">
+                        <a href="#" id="detalhe-chat" class="btn btn-success" onclick="abrirChat(); return false;">Contatar via Chat</a>
+                    </div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
@@ -625,7 +629,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
-                                    ${subItems.length > 0 ? '' : produto.valor > 0 ? `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>` : `<p class="card-text">Doação</p>`}
+                                    ${subItems.length > 0 ? '' : produto.disponivel && produto.valor > 0 ? `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>` : produto.disponivel ? `<p class="card-text">Doação</p>` : ''}
                                     <p class="card-text">Quantidade: ${subItems.length > 0 ? subItems.length + ' itens' : produto.quantidade}</p>
                                     <p class="card-text ${produto.disponivel ? 'text-success' : 'text-danger'}">
                                         ${produto.disponivel ? 'Disponível' : `Reservado${produto.reservadoPara ? ` (${produto.reservadoPara})` : ''}`}
@@ -679,12 +683,28 @@
             function mostrarSubItem(item) {
                 $("#detalhe-titulo").text(item.titulo);
                 $("#detalhe-descricao").text(item.descricao);
-                $("#detalhe-valor").text(item.valor.toFixed(2));
-                $("#detalhe-disponibilidade").text(item.disponivel ? 'Disponível' : 'Reservado');
+
+                // Mostra ou esconde o valor baseado na disponibilidade
+                if (item.disponivel) {
+                    $("#detalhe-valor-container").show();
+                    $("#detalhe-valor").text(item.valor.toFixed(2));
+                } else {
+                    $("#detalhe-valor-container").hide();
+                }
+
+                // Define a cor do texto de disponibilidade
+                $("#detalhe-disponibilidade")
+                    .text(item.disponivel ? 'Disponível' : 'Reservado')
+                    .removeClass('text-success text-danger')
+                    .addClass(item.disponivel ? 'text-success' : 'text-danger');
+
                 $("#detalhe-quantidade").text(item.quantidade);
                 $("#detalhe-data").text(item.dataEntrega);
                 $("#detalhe-estado").text(item.estado);
                 $("#detalhe-categoria").text(item.categoria);
+
+                // Mostra ou esconde o botão de chat baseado na disponibilidade
+                $("#detalhe-chat-container").toggle(item.disponivel);
 
                 const carousel = $("#carousel-images");
                 const miniaturas = $("#miniaturas-container");
