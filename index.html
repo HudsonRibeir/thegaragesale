@@ -512,11 +512,13 @@
                 }
             };
 
-            function abrirChatModal() {
+            window.abrirChatModal = function () {
 
                 inicializarChat();
 
-                let dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
+                if (!dadosUsuario || Object.keys(dadosUsuario).length === 0) {
+                    dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
+                }
                 const produto = currentSubItems[currentSubItemIndex];
 
                 setTimeout(() => {

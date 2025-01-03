@@ -4,14 +4,14 @@ const produtos = [
         "titulo": "TV Samsung 50 polegadas",
         "descricao": "Smart TV 50 polegadas Crystal UHD 4K UN50AU8000GXZD. Sem detalhes",
         "valor": 1000.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
         "imagens": ["01-tv-samsung-50-polegadas-1.jpeg", "01-tv-samsung-50-polegadas-2.jpeg", "01-tv-samsung-50-polegadas-3.jpeg"],
         "precoCerto": true,
-        "reservadoPara": ""
+        "reservadoPara": "Taci"
     },
     {
         "id": 2,
