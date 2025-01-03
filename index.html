@@ -352,6 +352,7 @@
                 <div class="modal-footer">
                     <div id="detalhe-chat-container">
                         <a href="#" id="detalhe-chat" class="btn btn-success" onclick="abrirChat(); return false;">Contatar via Chat</a>
+                        <a href="#" id="detalhe-whatsapp" class="btn btn-success" onclick="contatarWhatsapp(); return false;">Contatar via WhatsApp</a>
                     </div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
@@ -513,6 +514,9 @@
                     window.abrirChatAposSalvar = false;
                     abrirChatModal();
                     $("#btnChat").prop("disabled", false);
+                } else if (window.abrirWhatsappAposSalvar) {
+                    window.abrirWhatsappAposSalvar = false;
+                    enviarMensagemWhatsapp();
                 }
             };
 
@@ -563,12 +567,34 @@
 
                 if (dadosUsuario == null || dadosUsuario.nome == null) {
                     window.abrirChatAposSalvar = true;
+                    window.abrirWhatsappAposSalvar = false;
 
                     $("#contatoModal").modal('show');
                     return;
                 }
 
                 abrirChatModal();
+            };
+
+            window.enviarMensagemWhatsapp = function () {
+                const produto = currentSubItems[currentSubItemIndex];
+                const mensagem = `Olá! Me chamo ${dadosUsuario.nome} e tenho interesse no produto: ${produto.titulo} - R$ ${produto.valor.toFixed(2)}. Meus contatos são: ${dadosUsuario.whatsapp ? 'WhatsApp: ' + dadosUsuario.whatsapp : ''} ${dadosUsuario.email ? 'Email: ' + dadosUsuario.email : ''}`;
+
+                const whatsappUrl = `https://wa.me/5541999751101?text=${encodeURIComponent(mensagem)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+
+            window.contatarWhatsapp = function () {
+                $("#detalhesModal").modal('hide');
+
+                if (dadosUsuario == null || dadosUsuario.nome == null) {
+                    window.abrirChatAposSalvar = false;
+                    window.abrirWhatsappAposSalvar = true;
+                    $("#contatoModal").modal('show');
+                    return;
+                }
+
+                enviarMensagemWhatsapp();
             };
 
             function carregarCategorias() {
