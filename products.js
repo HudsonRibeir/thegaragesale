@@ -100,14 +100,14 @@ const produtos = [
         "titulo": "Microondas Branco",
         "descricao": "Micro-ondas Electrolux 20L Branco com Função Tira Odor e Descongelar",
         "valor": 250.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
         "imagens": ["07-microondas-1.jpeg", "07-microondas-2.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "",
+        "reservadoPara": "Harley",
         "entregue": false,
         "pago": false
     },
@@ -592,7 +592,7 @@ const produtos = [
     },
     {
         "id": 38,
-        "titulo": "Alexa + lampadas inteligentes",
+        "titulo": "Alexa + 2 lampadas inteligentes",
         "descricao": "1 Alexas + 2 lampadas inteligentes",
         "valor": 300.00,
         "disponivel": false,
@@ -707,14 +707,14 @@ const produtos = [
         "titulo": "Microondas",
         "descricao": "Microondas",
         "valor": 150.00,
-        "disponivel": false,
+        "disponivel": true,
         "quantidade": 1,
         "dataEntrega": "Fevereiro/2025",
         "estado": "Usado",
         "categoria": "Eletrodomésticos",
         "imagens": [],
         "precoCerto": false,
-        "reservadoPara": "Harley",
+        "reservadoPara": "",
         "entregue": false,
         "pago": false
     },
@@ -1266,4 +1266,20 @@ const produtos = [
         "entregue": false,
         "pago": false
     },
+    {
+        "id": 68,
+        "titulo": "Alexa + 2 lampadas inteligentes",
+        "descricao": "1 Alexas + 2 lampadas inteligentes",
+        "valor": 300.00,
+        "disponivel": false,
+        "quantidade": 1,
+        "dataEntrega": "Imediata",
+        "estado": "Usado",
+        "categoria": "Eletrônicos",
+        "imagens": [],
+        "precoCerto": true,
+        "reservadoPara": "Harley",
+        "entregue": false,
+        "pago": false
+    }
 ];
