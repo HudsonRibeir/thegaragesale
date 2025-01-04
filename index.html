@@ -625,7 +625,7 @@
                     const subItems = produto.subItems || [];
                     let cardContent;
 
-                    if (produto.precoCerto === false || produto.entregue === true) {
+                    if (produto.entregue === true) {
                         return;
                     }
 
@@ -661,7 +661,11 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
-                                    ${subItems.length > 0 ? '' : produto.disponivel && produto.valor > 0 ? `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>` : produto.disponivel ? `<p class="card-text">Doação</p>` : ''}
+                                    ${subItems.length > 0 ? '' : produto.disponivel && produto.valor > 0 ?
+                            produto.precoCerto ?
+                                `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>` :
+                                `<p class="card-text text-danger">Preço não definido, quer fazer uma proposta?</p>`
+                            : produto.disponivel ? `<p class="card-text">Doação</p>` : ''}
                                     <p class="card-text">Quantidade: ${subItems.length > 0 ? subItems.length + ' itens' : produto.quantidade}</p>
                                     <p class="card-text ${produto.pago ? 'text-danger' : produto.disponivel ? 'text-success' : 'text-warning'}">
                                         ${produto.pago ? 'Vendido' : produto.disponivel ? 'Disponível' : `Reservado${produto.reservadoPara ? ` (${produto.reservadoPara})` : ''}`}
@@ -719,7 +723,11 @@
                 // Mostra ou esconde o valor baseado na disponibilidade
                 if (item.disponivel) {
                     $("#detalhe-valor-container").show();
-                    $("#detalhe-valor").text(item.valor.toFixed(2));
+                    if (item.precoCerto) {
+                        $("#detalhe-valor").text(item.valor.toFixed(2));
+                    } else {
+                        $("#detalhe-valor").html('<span class="text-danger">Preço não definido, quer fazer uma proposta?</span>');
+                    }
                 } else {
                     $("#detalhe-valor-container").hide();
                 }
