@@ -180,16 +180,16 @@ const produtos = [
         "titulo": "Super Nintendo Fat original",
         "descricao": "Super Nintendo Fat original + 2 controles originais. Sem jogos. Sem fonte.",
         "valor": 300.00,
-        "disponivel": true,
+        "disponivel": false,
         "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Videogames",
         "imagens": ["12-super-nintendo-1.jpeg", "12-super-nintendo-2.jpeg", "12-super-nintendo-3.jpeg", "12-super-nintendo-4.jpeg", "12-super-nintendo-5.jpeg", "12-super-nintendo-6.jpeg", "12-super-nintendo-7.jpeg", "12-super-nintendo-8.jpeg", "12-super-nintendo-9.jpeg", "12-super-nintendo-10.jpeg", "12-super-nintendo-11.jpeg"],
         "precoCerto": true,
-        "reservadoPara": "",
-        "entregue": false,
-        "pago": false
+        "reservadoPara": "Marcelo Gorski",
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 13,
