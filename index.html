@@ -257,6 +257,17 @@
             border-color: #ffffff;
             background-color: #ffffff;
         }
+
+        .total-value {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: none;
+        }
     </style>
 </head>
 
@@ -265,6 +276,11 @@
     <div class="container my-5">
         <h1 class="text-center mb-4">Garage Sale Hudson e Sthefanny</h1>
         <p class="text-center mb-4">Estamos nos mudando para outro país e por isso estamos vendendo muitas coisas. Confira abaixo!</p>
+
+        <!-- Total a Receber -->
+        <div class="total-value mb-4">
+            Total a Receber: R$ <span id="total-value">0.00</span>
+        </div>
 
         <!-- Botão de Perfil -->
         <div class="text-end mb-4">
@@ -456,6 +472,25 @@
             let currentProduto = null;
             let dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
 
+            // Função para calcular o total a receber
+            function calcularTotalAReceber() {
+                let total = 0;
+                produtos.forEach(produto => {
+                    if (!produto.pago && produto.valor) {
+                        if (produto.subItems && produto.subItems.length > 0) {
+                            produto.subItems.forEach(subItem => {
+                                if (!subItem.pago && subItem.valor) {
+                                    total += subItem.valor;
+                                }
+                            });
+                        } else {
+                            total += produto.valor;
+                        }
+                    }
+                });
+                $("#total-value").text(`R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+            }
+
             // Atualiza o status do botão de perfil
             function atualizarBotaoPerfil() {
                 const btnPerfil = $("#btnPerfil");
@@ -609,6 +644,13 @@
                 const container = $("#produtos-container");
                 container.empty();
 
+                // Mostrar/esconder o total baseado no filtro de texto
+                if (filtroTexto.toLowerCase() === "stel&hud") {
+                    $(".total-value").show();
+                } else {
+                    $(".total-value").hide();
+                }
+
                 let produtosFiltrados = produtos.filter(produto =>
                     produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) &&
                     (filtroCategoria === "" || produto.categoria === filtroCategoria) &&
@@ -676,6 +718,9 @@
                         </div>
                     `);
                 });
+
+                // Atualiza o total a receber após carregar os produtos
+                calcularTotalAReceber();
             }
 
             $("#filtro-produtos, #filtro-categoria, #filtro-disponibilidade, #ordenacao").on("change input", function () {

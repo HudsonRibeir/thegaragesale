@@ -12,7 +12,7 @@ const produtos = [
         "imagens": ["01-tv-samsung-50-polegadas-1.jpeg", "01-tv-samsung-50-polegadas-2.jpeg", "01-tv-samsung-50-polegadas-3.jpeg"],
         "precoCerto": true,
         "reservadoPara": "Taci",
-        "entregue": false,
+        "entregue": true,
         "pago": true
     },
     {
@@ -108,8 +108,8 @@ const produtos = [
         "imagens": ["07-microondas-1.jpeg", "07-microondas-2.jpeg"],
         "precoCerto": true,
         "reservadoPara": "Harley",
-        "entregue": false,
-        "pago": false
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 8,
@@ -124,8 +124,8 @@ const produtos = [
         "imagens": ["08-maquina-cafe-3-coracoes-1.webp", "08-maquina-cafe-3-coracoes-2.webp", "08-maquina-cafe-3-coracoes-3.webp"],
         "precoCerto": true,
         "reservadoPara": "Harley",
-        "entregue": false,
-        "pago": false
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 9,
@@ -596,7 +596,7 @@ const produtos = [
         "descricao": "1 Alexas + 2 lampadas inteligentes",
         "valor": 300.00,
         "disponivel": false,
-        "quantidade": 2,
+        "quantidade": 1,
         "dataEntrega": "Imediata",
         "estado": "Usado",
         "categoria": "Eletrônicos",
@@ -779,8 +779,8 @@ const produtos = [
         "imagens": ["49-ar-condicionado-portátil-10000-btu-1.jpeg", "49-ar-condicionado-portátil-10000-btu-2.jpeg", "49-ar-condicionado-portátil-10000-btu-3.jpeg"],
         "precoCerto": true,
         "reservadoPara": "Harley",
-        "entregue": false,
-        "pago": false
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 50,
@@ -1196,8 +1196,8 @@ const produtos = [
         "imagens": ["64-cabideiro-1.jpeg", "64-cabideiro-2.jpeg"],
         "precoCerto": true,
         "reservadoPara": "Harley",
-        "entregue": false,
-        "pago": false
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 65,
@@ -1260,8 +1260,8 @@ const produtos = [
         "imagens": [],
         "precoCerto": true,
         "reservadoPara": "Harley",
-        "entregue": false,
-        "pago": false
+        "entregue": true,
+        "pago": true
     },
     {
         "id": 69,
