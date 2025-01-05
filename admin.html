@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Garage Sale</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <style>
+        body {
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-container {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .produto-form {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .table-responsive {
+            margin-top: 2rem;
+        }
+
+        .navbar {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 20px;
+        }
+
+        .snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        .snackbar.success {
+            background-color: #28a745;
+        }
+
+        .snackbar.error {
+            background-color: #dc3545;
+        }
+
+        .snackbar.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        .pagination {
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .pagination .page-link {
+            color: #6f42c1;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #6f42c1;
+            border-color: #6f42c1;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #9b7bb3;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Container de Login -->
+    <div class="login-container" id="loginContainer">
+        <h2 class="text-center mb-4">Login Administrativo</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+            </div>
+            <div class="text-danger mb-3" id="loginError" style="display: none;"></div>
+            <button type="submit" class="btn btn-primary w-100" style="background-color: #6f42c1; border-color: #6f42c1;">Entrar</button>
+        </form>
+    </div>
+
+    <!-- Container Administrativo -->
+    <div class="container mt-5" id="adminContainer" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Lista de Produtos</h4>
+            <div>
+                <button class="btn" style="background-color: #6f42c1; color: white;" data-bs-toggle="modal" data-bs-target="#produtoModal" onclick="abrirModalNovoProduto()">
+                    Novo Produto
+                </button>
+                <button class="btn btn-danger ms-2" id="btnLogout">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row filters">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="pesquisaNome" placeholder="Pesquisar por nome...">
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filtroCategoria">
+                    <option value="">Todas as categorias</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filtroReservado">
+                    <option value="">Todos os produtos</option>
+                    <option value="true">Reservados</option>
+                    <option value="false">Não reservados</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
+                        <th>Disponível</th>
+                        <th>Reservado Para</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="produtosLista">
+                    <!-- Os produtos serão carregados aqui dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        <nav aria-label="Navegação de página">
+            <ul class="pagination" id="paginacao">
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Modal do Formulário -->
+    <div class="modal fade" id="produtoModal" tabindex="-1" aria-labelledby="produtoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="produtoModalLabel">Novo Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="produtoForm">
+                        <input type="hidden" id="produtoId">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="valor" class="form-label">Valor</label>
+                                <input type="number" class="form-control" id="valor" step="0.01" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" rows="2" required></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <input type="text" class="form-control" id="categoria" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="disponivel" class="form-label">Disponível</label>
+                                <select class="form-select" id="disponivel" required>
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-select" id="estado" required>
+                                    <option value="Novo">Novo</option>
+                                    <option value="Usado">Usado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="quantidade" class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" id="quantidade" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dataEntrega" class="form-label">Data de Entrega</label>
+                                <input type="date" class="form-control" id="dataEntrega">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="precoCerto" class="form-label">Preço Certo</label>
+                                <select class="form-select" id="precoCerto">
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="reservadoPara" class="form-label">Reservado Para</label>
+                                <input type="text" class="form-control" id="reservadoPara">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="entregue" class="form-label">Entregue</label>
+                                <select class="form-select" id="entregue">
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pago" class="form-label">Pago</label>
+                                <select class="form-select" id="pago">
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-end">
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este produto? Esta ação é permanente e não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Snackbar -->
+    <div id="snackbar" class="snackbar"></div>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBy_1o5ZxXElaD92C_h2XNZ4zdOEuM6aGg",
+            authDomain: "garage-sale-ee8b6.firebaseapp.com",
+            projectId: "garage-sale-ee8b6",
+            storageBucket: "garage-sale-ee8b6.firebasestorage.app",
+            messagingSenderId: "1069466264182",
+            appId: "1:1069466264182:web:5100a3cd4d046884c1f557"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let todosProdutos = [];
+        let produtosFiltrados = [];
+        const itensPorPagina = 10;
+        let paginaAtual = 1;
+
+        // Função para mostrar snackbar
+        function mostrarSnackbar(mensagem, tipo = 'success') {
+            const snackbar = document.getElementById("snackbar");
+            snackbar.textContent = mensagem;
+            snackbar.className = `snackbar ${tipo} show`;
+            setTimeout(() => {
+                snackbar.className = snackbar.className.replace("show", "").replace(tipo, "");
+            }, 3000);
+        }
+
+        // Controle de autenticação
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                $('#loginContainer').hide();
+                $('#adminContainer').show();
+                carregarProdutos();
+            } else {
+                $('#loginContainer').show();
+                $('#adminContainer').hide();
+            }
+        });
+
+        // Login
+        $('#loginForm').submit((e) => {
+            e.preventDefault();
+            const email = $('#loginEmail').val();
+            const password = $('#loginPassword').val();
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .catch((error) => {
+                    $('#loginError').text('Email ou senha inválidos').show();
+                });
+        });
+
+        // Logout
+        $('#btnLogout').click(() => {
+            firebase.auth().signOut();
+        });
+
+        // Filtros e pesquisa
+        $('#pesquisaNome').on('input', filtrarProdutos);
+        $('#filtroCategoria').change(filtrarProdutos);
+        $('#filtroReservado').change(filtrarProdutos);
+
+        function filtrarProdutos() {
+            const termoPesquisa = $('#pesquisaNome').val().toLowerCase();
+            const categoriaFiltro = $('#filtroCategoria').val();
+            const reservadoFiltro = $('#filtroReservado').val();
+
+            produtosFiltrados = todosProdutos.filter(produto => {
+                const correspondeNome = produto.titulo.toLowerCase().includes(termoPesquisa);
+                const correspondeCategoria = !categoriaFiltro || produto.categoria === categoriaFiltro;
+                const correspondeReservado = !reservadoFiltro ||
+                    (reservadoFiltro === 'true' && produto.reservadoPara) ||
+                    (reservadoFiltro === 'false' && !produto.reservadoPara);
+                return correspondeNome && correspondeCategoria && correspondeReservado;
+            });
+
+            paginaAtual = 1;
+            atualizarTabela();
+        }
+
+        function atualizarPaginacao() {
+            const totalPaginas = Math.ceil(produtosFiltrados.length / itensPorPagina);
+            const paginacao = $('#paginacao');
+            paginacao.empty();
+
+            // Botão anterior
+            paginacao.append(`
+                <li class="page-item ${paginaAtual === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="mudarPagina(${paginaAtual - 1})">Anterior</a>
+                </li>
+            `);
+
+            // Páginas numeradas
+            for (let i = 1; i <= totalPaginas; i++) {
+                paginacao.append(`
+                    <li class="page-item ${paginaAtual === i ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="mudarPagina(${i})">${i}</a>
+                    </li>
+                `);
+            }
+
+            // Botão próximo
+            paginacao.append(`
+                <li class="page-item ${paginaAtual === totalPaginas ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="mudarPagina(${paginaAtual + 1})">Próximo</a>
+                </li>
+            `);
+        }
+
+        function mudarPagina(novaPagina) {
+            const totalPaginas = Math.ceil(produtosFiltrados.length / itensPorPagina);
+            if (novaPagina >= 1 && novaPagina <= totalPaginas) {
+                paginaAtual = novaPagina;
+                atualizarTabela();
+            }
+        }
+
+        function atualizarTabela() {
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const produtosPagina = produtosFiltrados.slice(inicio, fim);
+
+            $('#produtosLista').empty();
+            produtosPagina.forEach((produto, index) => {
+                const numeroGlobal = inicio + index + 1;
+                $('#produtosLista').append(`
+                    <tr>
+                        <td>${numeroGlobal}</td>
+                        <td>${produto.titulo}</td>
+                        <td>R$ ${produto.valor.toFixed(2)}</td>
+                        <td>${produto.categoria}</td>
+                        <td>${produto.disponivel ? 'Sim' : 'Não'}</td>
+                        <td>${produto.reservadoPara || '-'}</td>
+                        <td>
+                            <button class="btn btn-sm me-2" style="background-color: #6f42c1; color: white;" onclick="editarProduto('${produto.idInterno}')">
+                                <i class="bi bi-pencil"></i> Editar
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmarExclusao('${produto.idInterno}')">
+                                <i class="bi bi-trash"></i> Excluir
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+
+            atualizarPaginacao();
+        }
+
+        function atualizarCategorias() {
+            const categorias = new Set(todosProdutos.map(p => p.categoria));
+            const filtroCategoria = $('#filtroCategoria');
+            filtroCategoria.empty();
+            filtroCategoria.append('<option value="">Todas as categorias</option>');
+            categorias.forEach(categoria => {
+                filtroCategoria.append(`<option value="${categoria}">${categoria}</option>`);
+            });
+        }
+
+        // Abrir Modal para Novo Produto
+        function abrirModalNovoProduto() {
+            $('#produtoModalLabel').text('Novo Produto');
+            $('#produtoForm')[0].reset();
+            $('#produtoId').val('');
+        }
+
+        // Abrir Modal para Editar Produto
+        function editarProduto(id) {
+            const produtoRef = database.ref('produtos/' + id);
+            produtoRef.once('value', (snapshot) => {
+                const produto = snapshot.val();
+                $('#produtoModalLabel').text('Editar Produto');
+                $('#produtoId').val(id);
+                $('#titulo').val(produto.titulo);
+                $('#descricao').val(produto.descricao);
+                $('#valor').val(produto.valor);
+                $('#categoria').val(produto.categoria);
+                $('#disponivel').val(produto.disponivel.toString());
+                $('#estado').val(produto.estado);
+                $('#quantidade').val(produto.quantidade);
+                $('#dataEntrega').val(produto.dataEntrega);
+                $('#precoCerto').val(produto.precoCerto.toString());
+                $('#reservadoPara').val(produto.reservadoPara);
+                $('#entregue').val(produto.entregue.toString());
+                $('#pago').val(produto.pago.toString());
+                $('#produtoModal').modal('show');
+            });
+        }
+
+        // Carregar Produtos
+        function carregarProdutos() {
+            const produtosRef = database.ref('produtos');
+            produtosRef.on('value', (snapshot) => {
+                todosProdutos = [];
+                snapshot.forEach((childSnapshot) => {
+                    const produto = childSnapshot.val();
+                    produto.idInterno = childSnapshot.key;
+                    todosProdutos.push(produto);
+                });
+
+                produtosFiltrados = [...todosProdutos];
+                atualizarCategorias();
+                atualizarTabela();
+            });
+        }
+
+        // Salvar/Atualizar produto
+        $('#produtoForm').submit((e) => {
+            e.preventDefault();
+            const produtoId = $('#produtoId').val();
+            const produto = {
+                titulo: $('#titulo').val(),
+                descricao: $('#descricao').val(),
+                valor: parseFloat($('#valor').val()),
+                disponivel: $('#disponivel').val() === 'true',
+                quantidade: parseInt($('#quantidade').val()),
+                dataEntrega: $('#dataEntrega').val(),
+                estado: $('#estado').val(),
+                categoria: $('#categoria').val(),
+                precoCerto: $('#precoCerto').val() === 'true',
+                reservadoPara: $('#reservadoPara').val(),
+                entregue: $('#entregue').val() === 'true',
+                pago: $('#pago').val() === 'true'
+            };
+
+            const produtosRef = database.ref('produtos');
+            if (produtoId) {
+                produtosRef.child(produtoId).update(produto)
+                    .then(() => {
+                        mostrarSnackbar("Produto atualizado com sucesso!", "success");
+                        $('#produtoModal').modal('hide');
+                    })
+                    .catch((error) => {
+                        mostrarSnackbar("Erro ao atualizar produto: " + error.message, "error");
+                    });
+            } else {
+                produtosRef.push(produto)
+                    .then(() => {
+                        mostrarSnackbar("Produto salvo com sucesso!", "success");
+                        $('#produtoModal').modal('hide');
+                    })
+                    .catch((error) => {
+                        mostrarSnackbar("Erro ao salvar produto: " + error.message, "error");
+                    });
+            }
+
+            $('#produtoForm')[0].reset();
+            $('#produtoId').val('');
+        });
+
+        let produtoIdParaExcluir = null;
+
+        // Função para abrir modal de confirmação de exclusão
+        function confirmarExclusao(id) {
+            produtoIdParaExcluir = id;
+            $('#confirmDeleteModal').modal('show');
+        }
+
+        // Excluir produto
+        $('#confirmDeleteBtn').click(() => {
+            if (produtoIdParaExcluir) {
+                database.ref('produtos/' + produtoIdParaExcluir).remove()
+                    .then(() => {
+                        mostrarSnackbar("Produto excluído com sucesso!", "success");
+                        $('#confirmDeleteModal').modal('hide');
+                    })
+                    .catch((error) => {
+                        mostrarSnackbar("Erro ao excluir produto: " + error.message, "error");
+                    });
+                produtoIdParaExcluir = null;
+            }
+        });
+
+        // Limpar formulário
+        $('#btnLimparForm').click(() => {
+            $('#produtoForm')[0].reset();
+            $('#produtoId').val('');
+        });
+    </script>
+</body>
+
+</html>
