@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-remote-config.js"></script>
 
     <style>
         body {
@@ -129,6 +130,60 @@
         .filters {
             margin-bottom: 20px;
         }
+
+        /* Estilos para miniaturas de imagens */
+        .image-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .image-preview {
+            position: relative;
+            display: inline-block;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        #loadingOverlay {
+            display: none;
+            /* Sempre começa oculto */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1055;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -212,6 +267,12 @@
     <!-- Modal do Formulário -->
     <div class="modal fade" id="produtoModal" tabindex="-1" aria-labelledby="produtoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
+            <div id="loadingOverlay">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <div class="mt-3">Enviando imagens, aguarde...</div>
+            </div>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="produtoModalLabel">Novo Produto</h5>
@@ -233,6 +294,13 @@
                             <div class="col-md-12">
                                 <label for="descricao" class="form-label">Descrição</label>
                                 <textarea class="form-control" id="descricao" rows="2" required></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="imagens" class="form-label">Imagens</label>
+                                <input type="file" class="form-control" id="imagens" multiple accept="image/*">
+                                <div class="image-thumbnails" id="imageThumbnails">
+                                    <!-- Miniaturas das imagens serão exibidas aqui -->
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="categoria" class="form-label">Categoria</label>
@@ -258,7 +326,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="dataEntrega" class="form-label">Data de Entrega</label>
-                                <input type="date" class="form-control" id="dataEntrega">
+                                <input type="text" class="form-control" id="dataEntrega">
                             </div>
                             <div class="col-md-4">
                                 <label for="precoCerto" class="form-label">Preço Certo</label>
@@ -274,15 +342,15 @@
                             <div class="col-md-4">
                                 <label for="entregue" class="form-label">Entregue</label>
                                 <select class="form-select" id="entregue">
-                                    <option value="true">Sim</option>
                                     <option value="false">Não</option>
+                                    <option value="true">Sim</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label for="pago" class="form-label">Pago</label>
                                 <select class="form-select" id="pago">
-                                    <option value="true">Sim</option>
                                     <option value="false">Não</option>
+                                    <option value="true">Sim</option>
                                 </select>
                             </div>
                         </div>
@@ -320,6 +388,13 @@
     <div id="snackbar" class="snackbar"></div>
 
     <script>
+
+        $('#produtoModal').on('show.bs.modal', () => {
+            // Sempre oculta o loading ao abrir a modal
+            $('#loadingOverlay').hide();
+        });
+
+
         // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBy_1o5ZxXElaD92C_h2XNZ4zdOEuM6aGg",
@@ -333,11 +408,21 @@
         // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const remoteConfig = firebase.remoteConfig();
+
+        remoteConfig.settings = {
+            minimumFetchIntervalMillis: 3600000,
+        };
+
+        remoteConfig.defaultConfig = {
+            githubToken: ""
+        };
 
         let todosProdutos = [];
         let produtosFiltrados = [];
         const itensPorPagina = 10;
         let paginaAtual = 1;
+        let imagensSelecionadas = [];
 
         // Função para mostrar snackbar
         function mostrarSnackbar(mensagem, tipo = 'success') {
@@ -377,6 +462,36 @@
         $('#btnLogout').click(() => {
             firebase.auth().signOut();
         });
+
+        // Manipulação de imagens
+        $('#imagens').change(function (e) {
+            const files = Array.from(e.target.files);
+            imagensSelecionadas = files;
+            atualizarMiniaturas();
+        });
+
+        function atualizarMiniaturas() {
+            const container = $('#imageThumbnails');
+            container.empty();
+
+            imagensSelecionadas.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    container.append(`
+                        <div class="image-preview">
+                            <img src="${e.target.result}" class="image-thumbnail">
+                            <span class="remove-image" onclick="removerImagem(${index})">×</span>
+                        </div>
+                    `);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removerImagem(index) {
+            imagensSelecionadas.splice(index, 1);
+            atualizarMiniaturas();
+        }
 
         // Filtros e pesquisa
         $('#pesquisaNome').on('input', filtrarProdutos);
@@ -484,6 +599,10 @@
             $('#produtoModalLabel').text('Novo Produto');
             $('#produtoForm')[0].reset();
             $('#produtoId').val('');
+            imagensSelecionadas = [];
+            $('#imageThumbnails').empty();
+            $('#entregue').val('false');
+            $('#pago').val('false');
         }
 
         // Abrir Modal para Editar Produto
@@ -505,7 +624,34 @@
                 $('#reservadoPara').val(produto.reservadoPara);
                 $('#entregue').val(produto.entregue.toString());
                 $('#pago').val(produto.pago.toString());
+
+                // Carregar imagens existentes
+                if (produto.imagens) {
+                    const container = $('#imageThumbnails');
+                    container.empty();
+                    produto.imagens.forEach((imagem, index) => {
+                        container.append(`
+                            <div class="image-preview">
+                                <img src="${imagem}" class="image-thumbnail">
+                                <span class="remove-image" onclick="removerImagemExistente('${id}', ${index})">×</span>
+                            </div>
+                        `);
+                    });
+                }
+
                 $('#produtoModal').modal('show');
+            });
+        }
+
+        function removerImagemExistente(produtoId, index) {
+            const produtoRef = database.ref('produtos/' + produtoId);
+            produtoRef.once('value', (snapshot) => {
+                const produto = snapshot.val();
+                if (produto.imagens) {
+                    produto.imagens.splice(index, 1);
+                    produtoRef.update({ imagens: produto.imagens });
+                    editarProduto(produtoId); // Recarrega as imagens
+                }
             });
         }
 
@@ -526,12 +672,91 @@
             });
         }
 
+        async function uploadImageToGitHub(imageFile, repo, owner, path) {
+            const base64Image = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(",")[1]); // Remove o prefixo `data:image/...`
+                reader.readAsDataURL(imageFile);
+            });
+
+            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+            let sha = null;
+
+            try {
+                // Buscar o token do Remote Config
+                await remoteConfig.fetchAndActivate();
+                const token = remoteConfig.getValue('githubToken').asString();
+
+                if (!token) {
+                    throw new Error('Token do GitHub não encontrado no Remote Config');
+                }
+
+                // Verifica se o arquivo já existe no repositório
+                try {
+                    const response = await fetch(url, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Accept": "application/vnd.github+json"
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        sha = data.sha; // Obtém o SHA do arquivo existente
+                    } else if (response.status !== 404) {
+                        // Apenas continua se o erro for 404 (arquivo inexistente)
+                        const errorData = await response.json();
+                        throw new Error(`Erro ao verificar existência do arquivo: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    if (error.message !== 'Not Found') {
+                        console.error("Erro ao verificar existência do arquivo:", error);
+                        return;
+                    }
+                }
+
+                // Cria ou atualiza o arquivo no repositório
+                try {
+                    const response = await fetch(url, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: "Upload de imagem",
+                            content: base64Image,
+                            sha: sha || undefined // Inclui o SHA se o arquivo já existir
+                        })
+                    });
+
+                    if (response.ok) {
+                        console.log(`Imagem salva com sucesso em: ${path}`);
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(`Erro ao salvar imagem: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    console.error(error.message);
+                }
+            } catch (error) {
+                console.error("Erro ao obter token do Remote Config:", error);
+                mostrarSnackbar("Erro ao obter token do GitHub", "error");
+            }
+        }
+
         // Salvar/Atualizar produto
-        $('#produtoForm').submit((e) => {
-            e.preventDefault();
+        $('#produtoForm').submit(async (e) => {
+            e.preventDefault(); // Evita o envio padrão do formulário.
+
+            $('#loadingOverlay').hide();
+
             const produtoId = $('#produtoId').val();
+            const titulo = $('#titulo').val();
             const produto = {
-                titulo: $('#titulo').val(),
+                titulo: titulo,
                 descricao: $('#descricao').val(),
                 valor: parseFloat($('#valor').val()),
                 disponivel: $('#disponivel').val() === 'true',
@@ -545,29 +770,51 @@
                 pago: $('#pago').val() === 'true'
             };
 
-            const produtosRef = database.ref('produtos');
-            if (produtoId) {
-                produtosRef.child(produtoId).update(produto)
-                    .then(() => {
-                        mostrarSnackbar("Produto atualizado com sucesso!", "success");
-                        $('#produtoModal').modal('hide');
-                    })
-                    .catch((error) => {
-                        mostrarSnackbar("Erro ao atualizar produto: " + error.message, "error");
-                    });
-            } else {
-                produtosRef.push(produto)
-                    .then(() => {
-                        mostrarSnackbar("Produto salvo com sucesso!", "success");
-                        $('#produtoModal').modal('hide');
-                    })
-                    .catch((error) => {
-                        mostrarSnackbar("Erro ao salvar produto: " + error.message, "error");
-                    });
-            }
+            try {
+                if (imagensSelecionadas.length > 0) {
+                    // Exibir o loading overlay somente ao iniciar o upload
 
-            $('#produtoForm')[0].reset();
-            $('#produtoId').val('');
+                    $('#loadingOverlay').show();
+                    produto.imagens = [];
+
+                    // Upload sequencial das imagens
+                    for (let i = 0; i < imagensSelecionadas.length; i++) {
+                        const file = imagensSelecionadas[i];
+                        const extensao = file.name.split('.').pop();
+                        const filePath = `images/${titulo}`;
+                        const filename = `${filePath}/${i.toString().padStart(2, '0')}.${extensao}`;
+                        const path = filename;
+
+                        const token = remoteConfig.getValue('githubToken').asString();
+
+                        // Aguarda o upload da imagem atual antes de prosseguir
+                        await uploadImageToGitHub(file, "thegaragesale", "HudsonRibeir", path, token);
+
+                        const githubLink = "https://raw.githubusercontent.com/HudsonRibeir/thegaragesale/main/";
+                        produto.imagens.push(`${githubLink}${filename}`);
+                    }
+                }
+
+                const produtosRef = database.ref('produtos');
+                if (produtoId) {
+                    await produtosRef.child(produtoId).update(produto);
+                    mostrarSnackbar("Produto atualizado com sucesso!", "success");
+                } else {
+                    await produtosRef.push(produto);
+                    mostrarSnackbar("Produto salvo com sucesso!", "success");
+                }
+
+                $('#produtoModal').modal('hide');
+            } catch (error) {
+                mostrarSnackbar("Erro ao salvar produto: " + error.message, "error");
+            } finally {
+                // Esconde o loading overlay após o término do upload
+                $('#loadingOverlay').hide();
+
+                $('#produtoForm')[0].reset();
+                $('#produtoId').val('');
+                imagensSelecionadas = [];
+            }
         });
 
         let produtoIdParaExcluir = null;
@@ -597,6 +844,8 @@
         $('#btnLimparForm').click(() => {
             $('#produtoForm')[0].reset();
             $('#produtoId').val('');
+            imagensSelecionadas = [];
+            $('#imageThumbnails').empty();
         });
     </script>
 </body>
