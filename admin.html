@@ -781,7 +781,12 @@
                     for (let i = 0; i < imagensSelecionadas.length; i++) {
                         const file = imagensSelecionadas[i];
                         const extensao = file.name.split('.').pop();
-                        const filePath = `images/${titulo}`;
+                        // Remove acentos e caracteres especiais do título
+                        const tituloNormalizado = titulo.normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-zA-Z0-9]/g, '_')
+                            .toLowerCase();
+                        const filePath = `images/${tituloNormalizado}`;
                         const filename = `${filePath}/${i.toString().padStart(2, '0')}.${extensao}`;
                         const path = filename;
 
@@ -790,7 +795,7 @@
                         // Aguarda o upload da imagem atual antes de prosseguir
                         await uploadImageToGitHub(file, "thegaragesale", "HudsonRibeir", path, token);
 
-                        const githubLink = "https://raw.githubusercontent.com/HudsonRibeir/thegaragesale/main/";
+                        const githubLink = "https://raw.githubusercontent.com/HudsonRibeir/thegaragesale/master/";
                         produto.imagens.push(`${githubLink}${filename}`);
                     }
                 }
