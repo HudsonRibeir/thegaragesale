@@ -714,7 +714,7 @@
                         if (subItems.some(item => item.imagens && item.imagens.length > 0)) {
                             const imagensGrid = subItems.map(item =>
                                 item.imagens && item.imagens.length > 0
-                                    ? `<img src="images/${item.imagens[0]}" alt="${item.titulo}">`
+                                    ? `<img src="${item.imagens[0]}" alt="${item.titulo}">`
                                     : `<div class="no-image-placeholder">Em breve imagens</div>`
                             ).join('');
                             const gridClass = subItems.length <= 1 ? 'grid-1' :
@@ -729,7 +729,7 @@
                         }
                     } else {
                         if (produto.imagens && produto.imagens.length > 0) {
-                            cardContent = `<img src="images/${produto.imagens[0]}" alt="${produto.titulo}" class="card-img-top">`;
+                            cardContent = `<img src="${produto.imagens[0]}" alt="${produto.titulo}" class="card-img-top">`;
                         } else {
                             cardContent = `<div class="no-image-placeholder">Em breve imagens</div>`;
                         }
@@ -839,12 +839,12 @@
                     item.imagens.forEach((imagem, index) => {
                         carousel.append(`
                             <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                <img src="images/${imagem}" class="d-block w-100" alt="Foto ${index + 1}" onclick="ampliarImagem('images/${imagem}')">
+                                <img src="${imagem}" class="d-block w-100" alt="Foto ${index + 1}" onclick="ampliarImagem('${imagem}')">
                             </div>
                         `);
 
                         miniaturas.append(`
-                            <img src="images/${imagem}" 
+                            <img src="${imagem}" 
                                 class="miniatura ${index === 0 ? 'active' : ''}" 
                                 alt="Miniatura ${index + 1}"
                                 onclick="mudarImagem(${index})"
