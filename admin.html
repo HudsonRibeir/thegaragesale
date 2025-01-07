@@ -805,6 +805,16 @@
                     await produtosRef.child(produtoId).update(produto);
                     mostrarSnackbar("Produto atualizado com sucesso!", "success");
                 } else {
+                    // Buscar o último ID
+                    const snapshot = await produtosRef.orderByChild('id').limitToLast(1).once('value');
+                    let ultimoId = 0;
+                    snapshot.forEach((child) => {
+                        ultimoId = child.val().id || 0;
+                    });
+
+                    // Adicionar ID incrementado ao novo produto
+                    produto.id = ultimoId + 1;
+
                     await produtosRef.push(produto);
                     mostrarSnackbar("Produto salvo com sucesso!", "success");
                 }
