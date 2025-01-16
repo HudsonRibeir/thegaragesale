@@ -755,10 +755,24 @@
 
             const produtoId = $('#produtoId').val();
             const titulo = $('#titulo').val();
+            const valorAtual = parseFloat($('#valor').val());
+
+            // Verifica se é uma atualização e compara os valores
+            if (produtoId) {
+                const produtoRef = database.ref('produtos/' + produtoId);
+                const snapshot = await produtoRef.once('value');
+                const produtoAntigo = snapshot.val();
+                
+                if (produtoAntigo && valorAtual < produtoAntigo.valor) {
+                    // Se o novo valor for menor, adiciona a data atual
+                    produto.dataValorBaixado = new Date().toISOString();
+                }
+            }
+
             const produto = {
                 titulo: titulo,
                 descricao: $('#descricao').val(),
-                valor: parseFloat($('#valor').val()),
+                valor: valorAtual,
                 disponivel: $('#disponivel').val() === 'true',
                 quantidade: parseInt($('#quantidade').val()),
                 dataEntrega: $('#dataEntrega').val(),
@@ -767,7 +781,8 @@
                 precoCerto: $('#precoCerto').val() === 'true',
                 reservadoPara: $('#reservadoPara').val(),
                 entregue: $('#entregue').val() === 'true',
-                pago: $('#pago').val() === 'true'
+                pago: $('#pago').val() === 'true',
+                dataAtualizacao: new Date().toISOString() // Adiciona data de atualização
             };
 
             try {

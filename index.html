@@ -7,6 +7,8 @@
     <title>Garage Sale Hudson e Sthefanny</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -287,6 +289,11 @@
             font-weight: bold;
             display: none;
         }
+
+        .valor-baixado {
+            color: #28a745;
+            margin-left: 5px;
+        }
     </style>
 </head>
 
@@ -332,7 +339,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <select id="ordenacao" class="form-select">
-                    <option value="">Ordenar por...</option>
+                    <option value="dataAtualizacao">Mais Recentes</option>
                     <option value="alfabetica">Ordem Alfabética</option>
                     <option value="categoria">Categoria</option>
                 </select>
@@ -493,6 +500,20 @@
             let currentProduto = null;
             let dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario') || '{}');
             let produtos = [];
+
+            // Função para verificar se a data está dentro dos últimos 5 dias
+            function verificarDataValorBaixado(dataValorBaixado) {
+                if (!dataValorBaixado) return false;
+
+                const dataAtual = new Date();
+                const partes = dataValorBaixado.split(' ')[0].split('/');
+                const dataValor = new Date(partes[2], partes[1] - 1, partes[0]);
+
+                const diffTime = Math.abs(dataAtual - dataValor);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                return diffDays <= 5;
+            }
 
             // Função para buscar produtos do Firebase
             function carregarProdutosDoFirebase() {
@@ -679,7 +700,7 @@
                 });
             }
 
-            function carregarProdutos(filtroTexto = "", filtroCategoria = "", filtroDisponibilidade = "", ordenacao = "") {
+            function carregarProdutos(filtroTexto = "", filtroCategoria = "", filtroDisponibilidade = "", ordenacao = "dataAtualizacao") {
                 const container = $("#produtos-container");
                 container.empty();
 
@@ -700,6 +721,12 @@
                     produtosFiltrados.sort((a, b) => a.titulo.localeCompare(b.titulo));
                 } else if (ordenacao === "categoria") {
                     produtosFiltrados.sort((a, b) => a.categoria.localeCompare(b.categoria));
+                } else if (ordenacao === "dataAtualizacao") {
+                    produtosFiltrados.sort((a, b) => {
+                        const dataA = a.dataAtualizacao ? new Date(a.dataAtualizacao) : new Date(0);
+                        const dataB = b.dataAtualizacao ? new Date(b.dataAtualizacao) : new Date(0);
+                        return dataB - dataA;
+                    });
                 }
 
                 produtosFiltrados.forEach(produto => {
@@ -735,6 +762,9 @@
                         }
                     }
 
+                    const valorBaixadoRecente = verificarDataValorBaixado(produto.dataValorBaixado);
+                    const setaBaixo = valorBaixadoRecente ? '<i class="fas fa-arrow-down text-danger"></i> ' : '';
+
                     container.append(`
                         <div class="col-md-4 mb-4">
                             <div class="card" onclick="verDetalhes(${produto.id})">
@@ -744,7 +774,7 @@
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
                                     ${subItems.length > 0 ? '' : produto.disponivel && produto.valor > 0 ?
                             produto.precoCerto ?
-                                `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)}</p>` :
+                                `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)} ${setaBaixo}</p>` :
                                 `<p class="card-text text-danger">Preço não definido, quer fazer uma proposta?</p>`
                             : produto.disponivel ? `<p class="card-text">Doação</p>` : ''}
                                     <p class="card-text">Quantidade: ${subItems.length > 0 ? subItems.length + ' itens' : produto.quantidade}</p>
@@ -808,7 +838,9 @@
                 if (item.disponivel) {
                     $("#detalhe-valor-container").show();
                     if (item.precoCerto) {
-                        $("#detalhe-valor").text(item.valor.toFixed(2));
+                        const valorBaixadoRecente = verificarDataValorBaixado(item.dataValorBaixado);
+                        const setaBaixo = valorBaixadoRecente ? '<i class="fas fa-arrow-down text-danger"></i> ' : '';
+                        $("#detalhe-valor").html(`${setaBaixo}${item.valor.toFixed(2)}`);
                     } else {
                         $("#detalhe-valor").html('<span class="text-danger">Preço não definido, quer fazer uma proposta?</span>');
                     }
