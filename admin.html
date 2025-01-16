@@ -757,17 +757,17 @@
             const titulo = $('#titulo').val();
             const valorAtual = parseFloat($('#valor').val());
 
-            // Verifica se é uma atualização e compara os valores
-            if (produtoId) {
-                const produtoRef = database.ref('produtos/' + produtoId);
-                const snapshot = await produtoRef.once('value');
-                const produtoAntigo = snapshot.val();
-                
-                if (produtoAntigo && valorAtual < produtoAntigo.valor) {
-                    // Se o novo valor for menor, adiciona a data atual
-                    produto.dataValorBaixado = new Date().toISOString();
-                }
-            }
+            // Formata a data atual
+            const dataAtual = new Date();
+            const dataFormatada = dataAtual.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
 
             const produto = {
                 titulo: titulo,
@@ -782,8 +782,20 @@
                 reservadoPara: $('#reservadoPara').val(),
                 entregue: $('#entregue').val() === 'true',
                 pago: $('#pago').val() === 'true',
-                dataAtualizacao: new Date().toISOString() // Adiciona data de atualização
+                dataAtualizacao: dataFormatada // Adiciona data de atualização formatada
             };
+
+            // Verifica se é uma atualização e compara os valores
+            if (produtoId) {
+                const produtoRef = database.ref('produtos/' + produtoId);
+                const snapshot = await produtoRef.once('value');
+                const produtoAntigo = snapshot.val();
+
+                if (produtoAntigo && valorAtual < produtoAntigo.valor) {
+                    // Se o novo valor for menor, adiciona a data atual formatada
+                    produto.dataValorBaixado = dataFormatada;
+                }
+            }
 
             try {
                 if (imagensSelecionadas.length > 0) {

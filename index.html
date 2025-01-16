@@ -506,8 +506,26 @@
                 if (!dataValorBaixado) return false;
 
                 const dataAtual = new Date();
-                const partes = dataValorBaixado.split(' ')[0].split('/');
-                const dataValor = new Date(partes[2], partes[1] - 1, partes[0]);
+                const dataAtualFormatada = dataAtual.toLocaleString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+
+                const partesData = dataValorBaixado.split(' ')[0].split('/');
+                const partesHora = dataValorBaixado.split(' ')[1].split(':');
+                const dataValor = new Date(
+                    parseInt(partesData[2]),
+                    parseInt(partesData[1]) - 1,
+                    parseInt(partesData[0]),
+                    parseInt(partesHora[0]),
+                    parseInt(partesHora[1]),
+                    parseInt(partesHora[2])
+                );
 
                 const diffTime = Math.abs(dataAtual - dataValor);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -723,8 +741,8 @@
                     produtosFiltrados.sort((a, b) => a.categoria.localeCompare(b.categoria));
                 } else if (ordenacao === "dataAtualizacao") {
                     produtosFiltrados.sort((a, b) => {
-                        const dataA = a.dataAtualizacao ? new Date(a.dataAtualizacao) : new Date(0);
-                        const dataB = b.dataAtualizacao ? new Date(b.dataAtualizacao) : new Date(0);
+                        const dataA = a.dataAtualizacao ? new Date(a.dataAtualizacao.split('/').reverse().join('/')) : new Date(0);
+                        const dataB = b.dataAtualizacao ? new Date(b.dataAtualizacao.split('/').reverse().join('/')) : new Date(0);
                         return dataB - dataA;
                     });
                 }
@@ -840,7 +858,7 @@
                     if (item.precoCerto) {
                         const valorBaixadoRecente = verificarDataValorBaixado(item.dataValorBaixado);
                         const setaBaixo = valorBaixadoRecente ? '<i class="fas fa-arrow-down text-danger"></i> ' : '';
-                        $("#detalhe-valor").html(`${setaBaixo}${item.valor.toFixed(2)}`);
+                        $("#detalhe-valor").html(`${item.valor.toFixed(2)} ${setaBaixo}`);
                     } else {
                         $("#detalhe-valor").html('<span class="text-danger">Preço não definido, quer fazer uma proposta?</span>');
                     }
