@@ -741,8 +741,23 @@
                     produtosFiltrados.sort((a, b) => a.categoria.localeCompare(b.categoria));
                 } else if (ordenacao === "dataAtualizacao") {
                     produtosFiltrados.sort((a, b) => {
-                        const dataA = a.dataAtualizacao ? new Date(a.dataAtualizacao.split('/').reverse().join('/')) : new Date(0);
-                        const dataB = b.dataAtualizacao ? new Date(b.dataAtualizacao.split('/').reverse().join('/')) : new Date(0);
+                        // Primeiro critério: disponibilidade (disponíveis primeiro)
+                        if (a.disponivel !== b.disponivel) {
+                            return b.disponivel - a.disponivel;
+                        }
+
+                        // Segundo critério: data
+                        const dataValorBaixadoA = a.dataValorBaixado ? new Date(a.dataValorBaixado.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:$6')) : new Date(0);
+                        const dataValorBaixadoB = b.dataValorBaixado ? new Date(b.dataValorBaixado.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:$6')) : new Date(0);
+
+                        if (dataValorBaixadoA > new Date(0) || dataValorBaixadoB > new Date(0)) {
+                            return dataValorBaixadoB - dataValorBaixadoA;
+                        }
+
+                        // Se não tiver dataValorBaixado, usa dataAtualizacao
+                        const dataA = a.dataAtualizacao ? new Date(a.dataAtualizacao.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:$6')) : new Date(0);
+                        const dataB = b.dataAtualizacao ? new Date(b.dataAtualizacao.replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:$6')) : new Date(0);
+
                         return dataB - dataA;
                     });
                 }
