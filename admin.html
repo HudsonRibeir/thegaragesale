@@ -184,6 +184,33 @@
             font-size: 20px;
             text-align: center;
         }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h5 {
+            color: #6f42c1;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 
@@ -216,6 +243,26 @@
                 <button class="btn btn-danger ms-2" id="btnLogout">
                     <i class="bi bi-box-arrow-right"></i> Sair
                 </button>
+            </div>
+        </div>
+
+        <!-- Cards de Estatísticas -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <h5>Total de Itens</h5>
+                <div class="stat-value" id="totalItens">0</div>
+            </div>
+            <div class="stat-card">
+                <h5>Itens Reservados</h5>
+                <div class="stat-value" id="itensReservados">0</div>
+            </div>
+            <div class="stat-card">
+                <h5>Itens Disponíveis</h5>
+                <div class="stat-value" id="itensDisponiveis">0</div>
+            </div>
+            <div class="stat-card">
+                <h5>Total a Receber</h5>
+                <div class="stat-value" id="totalReceber">R$ 0,00</div>
             </div>
         </div>
 
@@ -281,6 +328,8 @@
                 <div class="modal-body">
                     <form id="produtoForm">
                         <input type="hidden" id="produtoId">
+                        <input type="hidden" id="isSubItem">
+                        <input type="hidden" id="parentId">
 
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -493,6 +542,11 @@
             atualizarMiniaturas();
         }
 
+        // Função para remover acentos
+        function removerAcentos(str) {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
         // Filtros e pesquisa
         $('#pesquisaNome').on('input', filtrarProdutos);
         $('#filtroCategoria').change(filtrarProdutos);
@@ -500,20 +554,86 @@
 
         function filtrarProdutos() {
             const termoPesquisa = $('#pesquisaNome').val().toLowerCase();
+            const termoPesquisaSemAcentos = removerAcentos(termoPesquisa);
             const categoriaFiltro = $('#filtroCategoria').val();
             const reservadoFiltro = $('#filtroReservado').val();
 
-            produtosFiltrados = todosProdutos.filter(produto => {
-                const correspondeNome = produto.titulo.toLowerCase().includes(termoPesquisa);
+            produtosFiltrados = [];
+
+            todosProdutos.forEach(produto => {
+                const tituloSemAcentos = removerAcentos(produto.titulo.toLowerCase());
+                const correspondeNome = tituloSemAcentos.includes(termoPesquisaSemAcentos) ||
+                    produto.titulo.toLowerCase().includes(termoPesquisa);
+
                 const correspondeCategoria = !categoriaFiltro || produto.categoria === categoriaFiltro;
                 const correspondeReservado = !reservadoFiltro ||
                     (reservadoFiltro === 'true' && produto.reservadoPara) ||
                     (reservadoFiltro === 'false' && !produto.reservadoPara);
-                return correspondeNome && correspondeCategoria && correspondeReservado;
+
+                // Adiciona o produto principal se corresponder aos filtros
+                if (correspondeNome && correspondeCategoria && correspondeReservado) {
+                    produtosFiltrados.push({ ...produto, isSubItem: false });
+                }
+
+                // Verifica e adiciona subitens que correspondam à pesquisa
+                if (produto.subItems && produto.subItems.length > 0) {
+                    produto.subItems.forEach(subItem => {
+                        const subItemTituloSemAcentos = removerAcentos(subItem.titulo.toLowerCase());
+                        if ((subItemTituloSemAcentos.includes(termoPesquisaSemAcentos) ||
+                            subItem.titulo.toLowerCase().includes(termoPesquisa)) &&
+                            correspondeCategoria && correspondeReservado) {
+                            produtosFiltrados.push({
+                                ...subItem,
+                                isSubItem: true,
+                                parentId: produto.id,
+                                parentTitulo: produto.titulo
+                            });
+                        }
+                    });
+                }
             });
 
             paginaAtual = 1;
             atualizarTabela();
+            atualizarEstatisticas();
+        }
+
+        function atualizarEstatisticas() {
+            let itensReservados = 0;
+            let itensDisponiveis = 0;
+            let totalReceber = 0;
+            let totalItens = 0;
+
+            todosProdutos.forEach(produto => {
+                if (!produto.disponivel || (produto.reservadoPara != null && produto.reservadoPara != '')) {
+                    itensReservados++;
+                    if (produto.valor) totalReceber += produto.valor;
+                }
+                if (!produto.reservadoPara && produto.disponivel) {
+                    itensDisponiveis++;
+                    if (produto.valor) totalReceber += produto.valor;
+                }
+                totalItens++;
+
+                // Verificar subitens
+                if (produto.subItems) {
+                    produto.subItems.forEach(subItem => {
+                        if (subItem.reservadoPara && !subItem.entregue) {
+                            itensReservados++;
+                            if (subItem.valor) totalReceber += subItem.valor;
+                        }
+                        if (!subItem.reservadoPara && subItem.disponivel) {
+                            itensDisponiveis++;
+                        }
+                        totalItens++;
+                    });
+                }
+            });
+
+            $('#totalItens').text(totalItens.toLocaleString('pt-BR'));
+            $('#itensReservados').text(itensReservados.toLocaleString('pt-BR'));
+            $('#itensDisponiveis').text(itensDisponiveis.toLocaleString('pt-BR'));
+            $('#totalReceber').text(totalReceber.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         }
 
         function atualizarPaginacao() {
@@ -561,19 +681,20 @@
             $('#produtosLista').empty();
             produtosPagina.forEach((produto, index) => {
                 const numeroGlobal = inicio + index + 1;
+                const titulo = produto.isSubItem ? `${produto.parentTitulo} - ${produto.titulo}` : produto.titulo;
                 $('#produtosLista').append(`
                     <tr>
                         <td>${numeroGlobal}</td>
-                        <td>${produto.titulo}</td>
-                        <td>R$ ${produto.valor.toFixed(2)}</td>
+                        <td>${titulo}</td>
+                        <td>${produto.valor ? produto.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'R$ 0,00'}</td>
                         <td>${produto.categoria}</td>
                         <td>${produto.disponivel ? 'Sim' : 'Não'}</td>
                         <td>${produto.reservadoPara || '-'}</td>
                         <td>
-                            <button class="btn btn-sm me-2" style="background-color: #6f42c1; color: white;" onclick="editarProduto('${produto.idInterno}')">
+                            <button class="btn btn-sm me-2" style="background-color: #6f42c1; color: white;" onclick="editarProduto('${produto.id}', ${produto.isSubItem}, '${produto.parentId || ''}')">
                                 <i class="bi bi-pencil"></i> Editar
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="confirmarExclusao('${produto.idInterno}')">
+                            <button class="btn btn-sm btn-danger" onclick="confirmarExclusao('${produto.id}', ${produto.isSubItem}, '${produto.parentId || ''}')">
                                 <i class="bi bi-trash"></i> Excluir
                             </button>
                         </td>
@@ -587,11 +708,18 @@
         function atualizarCategorias() {
             const categorias = new Set(todosProdutos.map(p => p.categoria));
             const filtroCategoria = $('#filtroCategoria');
+            const categoriaAtual = filtroCategoria.val(); // Salva o valor atual do filtro
+
             filtroCategoria.empty();
             filtroCategoria.append('<option value="">Todas as categorias</option>');
             categorias.forEach(categoria => {
                 filtroCategoria.append(`<option value="${categoria}">${categoria}</option>`);
             });
+
+            // Restaura o valor do filtro
+            if (categoriaAtual) {
+                filtroCategoria.val(categoriaAtual);
+            }
         }
 
         // Abrir Modal para Novo Produto
@@ -599,6 +727,8 @@
             $('#produtoModalLabel').text('Novo Produto');
             $('#produtoForm')[0].reset();
             $('#produtoId').val('');
+            $('#isSubItem').val('false');
+            $('#parentId').val('');
             imagensSelecionadas = [];
             $('#imageThumbnails').empty();
             $('#entregue').val('false');
@@ -606,53 +736,85 @@
         }
 
         // Abrir Modal para Editar Produto
-        function editarProduto(id) {
-            const produtoRef = database.ref('produtos/' + id);
-            produtoRef.once('value', (snapshot) => {
-                const produto = snapshot.val();
-                $('#produtoModalLabel').text('Editar Produto');
-                $('#produtoId').val(id);
-                $('#titulo').val(produto.titulo);
-                $('#descricao').val(produto.descricao);
-                $('#valor').val(produto.valor);
-                $('#categoria').val(produto.categoria);
-                $('#disponivel').val(produto.disponivel.toString());
-                $('#estado').val(produto.estado);
-                $('#quantidade').val(produto.quantidade);
-                $('#dataEntrega').val(produto.dataEntrega);
-                $('#precoCerto').val(produto.precoCerto.toString());
-                $('#reservadoPara').val(produto.reservadoPara);
-                $('#entregue').val(produto.entregue.toString());
-                $('#pago').val(produto.pago.toString());
-
-                // Carregar imagens existentes
-                if (produto.imagens) {
-                    const container = $('#imageThumbnails');
-                    container.empty();
-                    produto.imagens.forEach((imagem, index) => {
-                        container.append(`
-                            <div class="image-preview">
-                                <img src="${imagem}" class="image-thumbnail">
-                                <span class="remove-image" onclick="removerImagemExistente('${id}', ${index})">×</span>
-                            </div>
-                        `);
+        function editarProduto(id, isSubItem = false, parentId = '') {
+            let produtoRef;
+            if (isSubItem) {
+                produtoRef = database.ref(`produtos/${parentId}/subItems`).orderByChild('id').equalTo(id);
+                produtoRef.once('value', (snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        const subItem = childSnapshot.val();
+                        preencherFormulario(subItem, id, true, parentId);
                     });
-                }
-
-                $('#produtoModal').modal('show');
-            });
+                });
+            } else {
+                produtoRef = database.ref('produtos/' + id);
+                produtoRef.once('value', (snapshot) => {
+                    const produto = snapshot.val();
+                    preencherFormulario(produto, id, false);
+                });
+            }
         }
 
-        function removerImagemExistente(produtoId, index) {
-            const produtoRef = database.ref('produtos/' + produtoId);
-            produtoRef.once('value', (snapshot) => {
-                const produto = snapshot.val();
-                if (produto.imagens) {
-                    produto.imagens.splice(index, 1);
-                    produtoRef.update({ imagens: produto.imagens });
-                    editarProduto(produtoId); // Recarrega as imagens
-                }
-            });
+        function preencherFormulario(produto, id, isSubItem = false, parentId = '') {
+            $('#produtoModalLabel').text('Editar Produto');
+            $('#produtoId').val(id);
+            $('#isSubItem').val(isSubItem);
+            $('#parentId').val(parentId);
+            $('#titulo').val(produto.titulo);
+            $('#descricao').val(produto.descricao);
+            $('#valor').val(produto.valor);
+            $('#categoria').val(produto.categoria);
+            $('#disponivel').val(produto.disponivel.toString());
+            $('#estado').val(produto.estado);
+            $('#quantidade').val(produto.quantidade);
+            $('#dataEntrega').val(produto.dataEntrega);
+            $('#precoCerto').val(produto.precoCerto.toString());
+            $('#reservadoPara').val(produto.reservadoPara);
+            $('#entregue').val(produto.entregue.toString());
+            $('#pago').val(produto.pago.toString());
+
+            // Carregar imagens existentes
+            if (produto.imagens) {
+                const container = $('#imageThumbnails');
+                container.empty();
+                produto.imagens.forEach((imagem, index) => {
+                    container.append(`
+                        <div class="image-preview">
+                            <img src="${imagem}" class="image-thumbnail">
+                            <span class="remove-image" onclick="removerImagemExistente('${id}', ${index}, ${isSubItem}, '${parentId}')">×</span>
+                        </div>
+                    `);
+                });
+            }
+
+            $('#produtoModal').modal('show');
+        }
+
+        function removerImagemExistente(produtoId, index, isSubItem = false, parentId = '') {
+            let produtoRef;
+            if (isSubItem) {
+                produtoRef = database.ref(`produtos/${parentId}/subItems`).orderByChild('id').equalTo(produtoId);
+                produtoRef.once('value', (snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        const subItem = childSnapshot.val();
+                        if (subItem.imagens) {
+                            subItem.imagens.splice(index, 1);
+                            childSnapshot.ref.update({ imagens: subItem.imagens });
+                            editarProduto(produtoId, true, parentId);
+                        }
+                    });
+                });
+            } else {
+                produtoRef = database.ref('produtos/' + produtoId);
+                produtoRef.once('value', (snapshot) => {
+                    const produto = snapshot.val();
+                    if (produto.imagens) {
+                        produto.imagens.splice(index, 1);
+                        produtoRef.update({ imagens: produto.imagens });
+                        editarProduto(produtoId);
+                    }
+                });
+            }
         }
 
         // Carregar Produtos
@@ -669,6 +831,7 @@
                 produtosFiltrados = [...todosProdutos];
                 atualizarCategorias();
                 atualizarTabela();
+                atualizarEstatisticas();
             });
         }
 

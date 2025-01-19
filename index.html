@@ -13,6 +13,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
+        // Função para remover acentos de uma string
+        function removerAcentos(str) {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
         // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBy_1o5ZxXElaD92C_h2XNZ4zdOEuM6aGg",
@@ -542,7 +547,14 @@
                         produtos.push(childSnapshot.val());
                     });
                     carregarCategorias();
-                    carregarProdutos();
+                    // Ao invés de chamar carregarProdutos() diretamente,
+                    // chamamos com os valores atuais dos filtros
+                    carregarProdutos(
+                        $("#filtro-produtos").val(),
+                        $("#filtro-categoria").val(),
+                        $("#filtro-disponibilidade").val(),
+                        $("#ordenacao").val()
+                    );
                 });
             }
 
@@ -711,11 +723,17 @@
             function carregarCategorias() {
                 const categorias = [...new Set(produtos.map(produto => produto.categoria))];
                 const filtroCategoria = $("#filtro-categoria");
+                const categoriaAtual = filtroCategoria.val(); // Salva o valor atual
+                
                 filtroCategoria.empty();
                 filtroCategoria.append('<option value="">Todas as Categorias</option>');
                 categorias.forEach(categoria => {
                     filtroCategoria.append(`<option value="${categoria}">${categoria}</option>`);
                 });
+                
+                if (categoriaAtual) { // Restaura o valor se existia
+                    filtroCategoria.val(categoriaAtual);
+                }
             }
 
             function carregarProdutos(filtroTexto = "", filtroCategoria = "", filtroDisponibilidade = "", ordenacao = "dataAtualizacao") {
@@ -729,11 +747,13 @@
                     $(".total-value").hide();
                 }
 
-                let produtosFiltrados = produtos.filter(produto =>
-                    produto.titulo.toLowerCase().includes(filtroTexto.toLowerCase()) &&
-                    (filtroCategoria === "" || produto.categoria === filtroCategoria) &&
-                    (filtroDisponibilidade === "" || produto.disponivel.toString() === filtroDisponibilidade)
-                );
+                let produtosFiltrados = produtos.filter(produto => {
+                    const tituloSemAcentos = removerAcentos(produto.titulo.toLowerCase());
+                    const filtroTextoSemAcentos = removerAcentos(filtroTexto.toLowerCase());
+                    return tituloSemAcentos.includes(filtroTextoSemAcentos) &&
+                        (filtroCategoria === "" || produto.categoria === filtroCategoria) &&
+                        (filtroDisponibilidade === "" || produto.disponivel.toString() === filtroDisponibilidade);
+                });
 
                 if (ordenacao === "alfabetica") {
                     produtosFiltrados.sort((a, b) => a.titulo.localeCompare(b.titulo));
@@ -805,11 +825,22 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${produto.titulo}</h5>
                                     <p class="card-text">Categoria: ${produto.categoria}</p>
-                                    ${subItems.length > 0 ? '' : produto.disponivel && produto.valor > 0 ?
-                            produto.precoCerto ?
-                                `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)} ${setaBaixo}</p>` :
-                                `<p class="card-text text-danger">Preço não definido, quer fazer uma proposta?</p>`
-                            : produto.disponivel ? `<p class="card-text">Doação</p>` : ''}
+                                    ${subItems.length > 0 ? 
+                                        (() => {
+                                            const valoresDisponiveis = subItems
+                                                .filter(item => item.disponivel && item.valor > 0)
+                                                .map(item => item.valor);
+                                            if (valoresDisponiveis.length > 0) {
+                                                const menorValor = Math.min(...valoresDisponiveis);
+                                                return `<p class="card-text">A partir de R$ ${menorValor.toFixed(2)} ${setaBaixo}</p>`;
+                                            }
+                                            return '';
+                                        })() 
+                                        : produto.disponivel && produto.valor > 0 ?
+                                            produto.precoCerto ?
+                                                `<p class="card-text">Valor: R$ ${produto.valor.toFixed(2)} ${setaBaixo}</p>` :
+                                                `<p class="card-text text-danger">Preço não definido, quer fazer uma proposta?</p>`
+                                            : produto.disponivel ? `<p class="card-text">Doação</p>` : ''}
                                     <p class="card-text">Quantidade: ${subItems.length > 0 ? subItems.length + ' itens' : produto.quantidade}</p>
                                     <p class="card-text ${produto.pago ? 'text-danger' : produto.disponivel ? 'text-success' : 'text-warning'}">
                                         ${produto.pago ? 'Vendido' : produto.disponivel ? 'Disponível' : `Reservado${produto.reservadoPara ? ` (${produto.reservadoPara})` : ''}`}
