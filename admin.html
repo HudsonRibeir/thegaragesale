@@ -691,10 +691,10 @@
                         <td>${produto.disponivel ? 'Sim' : 'Não'}</td>
                         <td>${produto.reservadoPara || '-'}</td>
                         <td>
-                            <button class="btn btn-sm me-2" style="background-color: #6f42c1; color: white;" onclick="editarProduto('${produto.id}', ${produto.isSubItem}, '${produto.parentId || ''}')">
+                            <button class="btn btn-sm me-2" style="background-color: #6f42c1; color: white;" onclick="editarProduto('${produto.idInterno}', ${produto?.isSubItem || false}, '${produto.parentId || ''}')">
                                 <i class="bi bi-pencil"></i> Editar
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="confirmarExclusao('${produto.id}', ${produto.isSubItem}, '${produto.parentId || ''}')">
+                            <button class="btn btn-sm btn-danger" onclick="confirmarExclusao('${produto.idInterno}', ${produto?.isSubItem || false}, '${produto.parentId || ''}')">
                                 <i class="bi bi-trash"></i> Excluir
                             </button>
                         </td>
